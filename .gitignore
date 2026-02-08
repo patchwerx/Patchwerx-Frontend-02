@@ -1,0 +1,14 @@
+# Node.js
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# dotenv environment variables file
+.env
