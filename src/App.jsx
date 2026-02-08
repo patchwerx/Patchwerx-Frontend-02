@@ -4,16 +4,41 @@ function App() {
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
   const [submitted, setSubmitted] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
+    setLoading(true)
+    setError(null)
 
-    // Later: send to API Gateway / Lambda
-    console.log('Patchwerx signup:', { email, phone })
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_BASE_URL}/userSignUp`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email,
+            phone,
+          }),
+        }
+      )
 
-    setSubmitted(true)
-    setEmail('')
-    setPhone('')
+      if (!response.ok) {
+        throw new Error('Signup failed')
+      }
+
+      setSubmitted(true)
+      setEmail('')
+      setPhone('')
+    } catch (err) {
+      setError('Something went wrong. Please try again.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -40,9 +65,11 @@ function App() {
             style={styles.input}
           />
 
-          <button type="submit" style={styles.button}>
-            Submit
+          <button type="submit" style={styles.button} disabled={loading}>
+            {loading ? 'Submitting…' : 'Submit'}
           </button>
+
+          {error && <p style={styles.error}>{error}</p>}
         </form>
       ) : (
         <p style={styles.confirmation}>
@@ -92,6 +119,10 @@ const styles = {
   confirmation: {
     fontSize: '1.1rem',
     color: '#16a34a',
+  },
+  error: {
+    color: '#dc2626',
+    fontSize: '0.9rem',
   },
 }
 
