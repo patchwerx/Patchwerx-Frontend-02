@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-export default function App() {
+function App() {
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
   const [submitted, setSubmitted] = useState(false)
@@ -8,8 +8,8 @@ export default function App() {
   const handleSubmit = (e) => {
     e.preventDefault()
 
-    // For now just log — later this hits API Gateway
-    console.log('Submitted:', { email, phone })
+    // Later: send to API Gateway / Lambda
+    console.log('Patchwerx signup:', { email, phone })
 
     setSubmitted(true)
     setEmail('')
@@ -46,7 +46,7 @@ export default function App() {
         </form>
       ) : (
         <p style={styles.confirmation}>
-          Thanks! We’ll be in touch.
+          Thanks — we’ll be in touch.
         </p>
       )}
     </div>
@@ -60,8 +60,8 @@ const styles = {
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    fontFamily: 'system-ui, sans-serif',
     backgroundColor: '#f8fafc',
+    fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, sans-serif',
   },
   title: {
     fontSize: '2.5rem',
@@ -86,7 +86,7 @@ const styles = {
     borderRadius: '6px',
     border: 'none',
     backgroundColor: '#2563eb',
-    color: 'white',
+    color: '#fff',
     cursor: 'pointer',
   },
   confirmation: {
@@ -94,3 +94,5 @@ const styles = {
     color: '#16a34a',
   },
 }
+
+export default App
