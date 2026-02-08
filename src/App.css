@@ -1,0 +1,27 @@
+.patchwerx-form {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.patchwerx-form input,
+.patchwerx-form select,
+.patchwerx-form button {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.patchwerx-form button {
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+}
+
+.patchwerx-form button:hover {
+    background-color: #0056b3;
+}
