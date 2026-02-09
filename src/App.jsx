@@ -215,7 +215,7 @@ function App() {
 
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_BASE_URL}/userSignUp`,
+        `${process.env.REACT_APP_API_BASE_URL}/startInitAuthFlow`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
