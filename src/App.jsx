@@ -7,7 +7,6 @@ import TherapistSignup from './pages/TherapistSignup'
 import TherapistLogin from './pages/TherapistLogin'
 import Dashboard from './pages/Dashboard'
 import Waitlist from './pages/Waitlist'
-import ClientProfile from './pages/ClientProfile'
 
 function Nav() {
   const linkClass = ({ isActive }) =>
@@ -130,14 +129,6 @@ export default function App() {
           element={
             <Shell>
               <Waitlist />
-            </Shell>
-          }
-        />
-        <Route
-          path="/client"
-          element={
-            <Shell>
-              <ClientProfile />
             </Shell>
           }
         />
