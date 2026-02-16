@@ -1,26 +1,23 @@
 import { Link } from 'react-router-dom'
-import { useBrandStyles } from '../../ui/useBrandStyles'
 
 export default function Home() {
-  const styles = useBrandStyles()
-
   return (
-    <div style={{ display: 'grid', gap: 14 }}>
-      <h2 style={styles.h2}>Automatic rebooking when sessions cancel.</h2>
-      <p style={styles.subtleText}>
+    <div>
+      <h1 className="pw-h1">Automatic rebooking when sessions cancel.</h1>
+      <p className="pw-lead">
         Patchwerx helps therapists fill last-minute openings by contacting the
-        right clients at the right time—without manual back-and-forth.
+        right clients at the right time — without manual back-and-forth.
       </p>
 
-      <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginTop: 8 }}>
-        <Link to="/signup/therapist" style={styles.navLink}>
-          Start as a therapist
+      <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginTop: 18 }}>
+        <Link className="pw-link pw-linkPrimary" to="/signup/therapist">
+          Start therapist setup
         </Link>
-        <Link to="/login/therapist" style={styles.navLink}>
-          Therapist login
+        <Link className="pw-link" to="/app">
+          View therapist dashboard
         </Link>
-        <Link to="/login/client" style={styles.navLink}>
-          Client login
+        <Link className="pw-link" to="/client">
+          Client portal
         </Link>
       </div>
     </div>

@@ -1,56 +1,36 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useBrandStyles } from '../../ui/useBrandStyles'
-import { auth } from '../../lib/auth'
 
 export default function TherapistLogin() {
   const [email, setEmail] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
-  const styles = useBrandStyles({ loading })
-  const navigate = useNavigate()
 
-  const submit = async (e) => {
+  const submit = (e) => {
     e.preventDefault()
-    setLoading(true)
-    setError(null)
-    try {
-      // placeholder: swap with real login API
-      if (!email.trim()) throw new Error('Missing email')
-      auth.setTherapistAuthed(true)
-      navigate('/app')
-    } catch (err) {
-      setError('Login failed.')
-    } finally {
-      setLoading(false)
-    }
+    // placeholder: wire to real auth later
+    alert(`Logged in (stub) as ${email}`)
   }
 
   return (
-    <div style={{ display: 'grid', gap: 12 }}>
-      <h2 style={styles.h2}>Therapist login</h2>
+    <div>
+      <h2>Login</h2>
+      <p className="pw-lead">Stub login for now — we’ll connect real auth next.</p>
 
-      <form onSubmit={submit} style={styles.form}>
+      <form className="pw-form" onSubmit={submit}>
         <div>
-          <label style={styles.label} htmlFor="email">
+          <label className="pw-label" htmlFor="email">
             Email
           </label>
           <input
             id="email"
-            style={styles.field}
+            className="pw-input"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             type="email"
-            autoComplete="email"
             required
           />
         </div>
-
-        <button type="submit" style={styles.button} disabled={loading}>
-          {loading ? 'Signing in…' : 'Sign in'}
+        <button className="pw-btn" type="submit">
+          Sign in
         </button>
-
-        {error && <div style={styles.error}>{error}</div>}
       </form>
     </div>
   )

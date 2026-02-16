@@ -1,26 +1,48 @@
-import { Outlet } from 'react-router-dom'
-import { useBrandStyles } from '../ui/useBrandStyles'
-import NavBar from '../ui/NavBar'
+import { Outlet, NavLink, Link } from 'react-router-dom'
 
-export default function ClientAppLayout() {
-  const styles = useBrandStyles()
+function ClientNav() {
+  const linkClass = ({ isActive }) =>
+    `pw-link ${isActive ? 'pw-linkPrimary' : ''}`
 
   return (
-    <div style={styles.page}>
-      <div style={styles.shell}>
-        <div style={styles.card}>
-          <NavBar
-            links={[
-              { to: '/client', label: 'Profile' },
-              { to: '/client/preferences', label: 'Preferences' },
-            ]}
-          />
-          <div style={styles.divider} />
+    <div className="pw-nav">
+      <div className="pw-container pw-nav-inner">
+        <Link className="pw-brand" to="/client">
+          <div className="pw-logo" aria-hidden="true">
+            <div className="pw-logoMark" />
+          </div>
+          <div className="pw-brandText">
+            <div className="pw-brandTitle">Patchwerx</div>
+            <div className="pw-brandSub">Client portal</div>
+          </div>
+        </Link>
+
+        <div className="pw-links" aria-label="Client">
+          <NavLink to="/client" end className={linkClass}>
+            Profile
+          </NavLink>
+          <NavLink to="/client/preferences" className={linkClass}>
+            Preferences
+          </NavLink>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default function ClientAppLayout() {
+  return (
+    <div className="pw-page">
+      <div className="pw-bg" />
+      <ClientNav />
+
+      <main className="pw-container pw-main">
+        <div className="pw-card pw-route">
           <Outlet />
         </div>
+      </main>
 
-        <div style={styles.footer}>© {new Date().getFullYear()} Patchwerx</div>
-      </div>
+      <footer className="pw-footer">© {new Date().getFullYear()} Patchwerx</footer>
     </div>
   )
 }

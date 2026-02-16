@@ -1,28 +1,54 @@
-import { Outlet } from 'react-router-dom'
-import { useBrandStyles } from '../ui/useBrandStyles'
-import NavBar from '../ui/NavBar'
+import { Outlet, NavLink, Link } from 'react-router-dom'
 
-export default function TherapistAppLayout() {
-  const styles = useBrandStyles()
+function TherapistNav() {
+  const linkClass = ({ isActive }) =>
+    `pw-link ${isActive ? 'pw-linkPrimary' : ''}`
 
   return (
-    <div style={styles.page}>
-      <div style={styles.shell}>
-        <div style={styles.card}>
-          <NavBar
-            links={[
-              { to: '/app', label: 'Dashboard' },
-              { to: '/app/waitlist', label: 'Waitlist' },
-              { to: '/app/settings', label: 'Settings' },
-              { to: '/app/billing', label: 'Billing' },
-            ]}
-          />
-          <div style={styles.divider} />
+    <div className="pw-nav">
+      <div className="pw-container pw-nav-inner">
+        <Link className="pw-brand" to="/app">
+          <div className="pw-logo" aria-hidden="true">
+            <div className="pw-logoMark" />
+          </div>
+          <div className="pw-brandText">
+            <div className="pw-brandTitle">Patchwerx</div>
+            <div className="pw-brandSub">Therapist portal</div>
+          </div>
+        </Link>
+
+        <div className="pw-links" aria-label="Therapist">
+          <NavLink to="/app" end className={linkClass}>
+            Dashboard
+          </NavLink>
+          <NavLink to="/app/waitlist" className={linkClass}>
+            Waitlist
+          </NavLink>
+          <NavLink to="/app/settings" className={linkClass}>
+            Settings
+          </NavLink>
+          <NavLink to="/app/billing" className={linkClass}>
+            Billing
+          </NavLink>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default function TherapistAppLayout() {
+  return (
+    <div className="pw-page">
+      <div className="pw-bg" />
+      <TherapistNav />
+
+      <main className="pw-container pw-main">
+        <div className="pw-card pw-route">
           <Outlet />
         </div>
+      </main>
 
-        <div style={styles.footer}>© {new Date().getFullYear()} Patchwerx</div>
-      </div>
+      <footer className="pw-footer">© {new Date().getFullYear()} Patchwerx</footer>
     </div>
   )
 }
