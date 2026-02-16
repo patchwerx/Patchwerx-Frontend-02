@@ -1,6 +1,8 @@
 import { useMemo, useState } from 'react'
 
 function App() {
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
   const [submitted, setSubmitted] = useState(false)
@@ -131,6 +133,13 @@ function App() {
         gap: '12px',
       },
 
+      // NEW: 2-up row for first/last name
+      twoColRow: {
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr',
+        gap: '12px',
+      },
+
       button: {
         borderRadius: '14px',
         border: '1px solid rgba(255,255,255,0.35)',
@@ -219,13 +228,21 @@ function App() {
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, phone }),
+          // UPDATED: include first_name + last_name
+          body: JSON.stringify({
+            email,
+            phone,
+            first_name: firstName.trim() || null,
+            last_name: lastName.trim() || null,
+          }),
         }
       )
 
       if (!response.ok) throw new Error('Signup failed')
 
       setSubmitted(true)
+      setFirstName('')
+      setLastName('')
       setEmail('')
       setPhone('')
     } catch (err) {
@@ -255,6 +272,39 @@ function App() {
 
           {!submitted ? (
             <form onSubmit={handleSubmit} style={styles.form}>
+              {/* NEW: First + Last name */}
+              <div style={styles.twoColRow}>
+                <div>
+                  <label style={styles.label} htmlFor="firstName">
+                    First name
+                  </label>
+                  <input
+                    id="firstName"
+                    type="text"
+                    placeholder="Brandon"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    autoComplete="given-name"
+                    style={styles.field}
+                  />
+                </div>
+
+                <div>
+                  <label style={styles.label} htmlFor="lastName">
+                    Last name
+                  </label>
+                  <input
+                    id="lastName"
+                    type="text"
+                    placeholder="Sherrard"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    autoComplete="family-name"
+                    style={styles.field}
+                  />
+                </div>
+              </div>
+
               <div>
                 <label style={styles.label} htmlFor="email">
                   Email
@@ -266,6 +316,7 @@ function App() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
+                  autoComplete="email"
                   style={styles.field}
                 />
               </div>
@@ -281,6 +332,7 @@ function App() {
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   required
+                  autoComplete="tel"
                   style={styles.field}
                 />
               </div>
@@ -318,9 +370,7 @@ function App() {
           ) : (
             <div style={styles.successWrap}>
               <p style={styles.successTitle}>You’re all set.</p>
-              <p style={styles.successText}>
-                Thanks — we’ll be in touch soon.
-              </p>
+              <p style={styles.successText}>Thanks — we’ll be in touch soon.</p>
               <button
                 type="button"
                 style={styles.secondaryButton}
@@ -335,9 +385,7 @@ function App() {
           )}
         </div>
 
-        <div style={styles.footer}>
-          © {new Date().getFullYear()} Patchwerx
-        </div>
+        <div style={styles.footer}>© {new Date().getFullYear()} Patchwerx</div>
       </div>
     </div>
   )
