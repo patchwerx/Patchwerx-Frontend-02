@@ -1,10 +1,172 @@
 export default function Pricing() {
   return (
-    <div>
-      <h2>Pricing</h2>
-      <p className="pw-lead">
-        Simple pay-as-you-go: pay only for successful rebookings.
-      </p>
+    <div style={{ paddingBottom: 28 }}>
+      {/* HERO */}
+      <section
+        className="pw-hero"
+        style={{
+          paddingTop: 28,
+          paddingBottom: 28,
+          rowGap: 22,
+        }}
+      >
+        <div style={{ maxWidth: 720 }}>
+          <div
+            className="pw-kicker"
+            style={{
+              fontWeight: 800,
+              fontSize: '1.05rem',
+              lineHeight: 1.3,
+              color: 'rgba(2,6,23,0.88)',
+              marginBottom: 14,
+            }}
+          >
+            Pricing
+          </div>
+
+          <h1
+            className="pw-h1"
+            style={{
+              fontSize: 'clamp(2rem, 4vw, 2.8rem)',
+              lineHeight: 1.08,
+              letterSpacing: '-0.02em',
+              margin: 0,
+            }}
+          >
+            Pay only when a session is rebooked.
+          </h1>
+
+          <p
+            className="pw-lead"
+            style={{
+              marginTop: 16,
+              fontSize: '1.15rem',
+              lineHeight: 1.7,
+              color: 'rgba(2,6,23,0.86)',
+              fontWeight: 520,
+              maxWidth: 640,
+            }}
+          >
+            Patchwerx charges a simple, transparent fee: <strong>$5 per
+            successfully rebooked session</strong>. If we don’t fill the
+            opening, you don’t pay.
+          </p>
+        </div>
+
+        {/* Price panel */}
+        <aside
+          className="pw-panel"
+          style={{
+            padding: 20,
+            maxWidth: 360,
+            textAlign: 'center',
+          }}
+        >
+          <div
+            style={{
+              fontSize: '2.6rem',
+              fontWeight: 950,
+              color: 'rgba(2,6,23,0.95)',
+              lineHeight: 1.1,
+            }}
+          >
+            $5
+          </div>
+          <div
+            style={{
+              fontSize: '1.05rem',
+              fontWeight: 700,
+              marginTop: 4,
+              color: 'rgba(2,6,23,0.85)',
+            }}
+          >
+            per successful rebooking
+          </div>
+
+          <div
+            style={{
+              marginTop: 14,
+              fontSize: '0.95rem',
+              lineHeight: 1.6,
+              color: 'rgba(2,6,23,0.75)',
+              fontWeight: 520,
+            }}
+          >
+            Billed monthly based on the number of sessions we actually fill.
+          </div>
+        </aside>
+      </section>
+
+      {/* How billing works */}
+      <section className="pw-grid3" style={{ marginTop: 22, gap: 16 }}>
+        {[
+          {
+            t: 'Only successful fills',
+            d: 'You’re charged only when a canceled session is actually rebooked.',
+          },
+          {
+            t: 'Monthly billing',
+            d: 'At the end of each month, we total your successful rebookings and send one simple invoice.',
+          },
+          {
+            t: 'No subscriptions',
+            d: 'No base fee, no contracts, and no charges for unused slots.',
+          },
+        ].map((x) => (
+          <div key={x.t} className="pw-panel" style={{ padding: 18 }}>
+            <div
+              style={{
+                fontSize: '1.05rem',
+                fontWeight: 950,
+                marginBottom: 8,
+                color: 'rgba(2,6,23,0.92)',
+              }}
+            >
+              {x.t}
+            </div>
+            <p
+              style={{
+                margin: 0,
+                fontSize: '1rem',
+                lineHeight: 1.7,
+                color: 'rgba(2,6,23,0.82)',
+                fontWeight: 520,
+              }}
+            >
+              {x.d}
+            </p>
+          </div>
+        ))}
+      </section>
+
+      {/* Closing panel */}
+      <section style={{ marginTop: 26 }}>
+        <div className="pw-panel" style={{ padding: 18, maxWidth: 720 }}>
+          <div
+            style={{
+              fontWeight: 950,
+              fontSize: '1.2rem',
+              color: 'rgba(2,6,23,0.92)',
+              marginBottom: 8,
+            }}
+          >
+            Aligned incentives
+          </div>
+          <p
+            style={{
+              margin: 0,
+              fontSize: '1.05rem',
+              lineHeight: 1.7,
+              color: 'rgba(2,6,23,0.84)',
+              fontWeight: 520,
+            }}
+          >
+            Patchwerx only gets paid when we help fill an opening. That means
+            our incentives are simple: more confirmed sessions for you, and no
+            extra costs when your schedule stays the same.
+          </p>
+        </div>
+      </section>
     </div>
   )
 }

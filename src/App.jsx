@@ -8,42 +8,52 @@ import TherapistLogin from './pages/TherapistLogin'
 import Dashboard from './pages/Dashboard'
 import Waitlist from './pages/Waitlist'
 
+
 function Nav() {
-  const linkClass = ({ isActive }) =>
-    `pw-link ${isActive ? 'pw-linkPrimary' : ''}`
+  const baseLink = 'pw-link'
+  const linkClass = ({ isActive }) => `${baseLink} ${isActive ? 'isActive' : ''}`
 
   return (
-    <div className="pw-nav">
-      <div className="pw-container pw-nav-inner">
-        <Link className="pw-brand" to="/">
-          <div className="pw-logo" aria-hidden="true">
-            <div className="pw-logoMark" />
-          </div>
-          <div className="pw-brandText">
-            <div className="pw-brandTitle">Patchwerx</div>
-            <div className="pw-brandSub">Calm scheduling, fewer gaps.</div>
-          </div>
-        </Link>
+    <header className="pw-nav" role="banner">
+      <div className="pw-container">
+        <div className="pw-nav-inner">
+          <Link className="pw-brand" to="/">
+            <div className="pw-logo" aria-hidden="true">
+              <img src="/logo.png" alt="" className="pw-logoImg" />
+            </div>
+            <div className="pw-brandText">
+              <div className="pw-brandTitle">Patchwerx</div>
+              <div className="pw-brandSub">Calm scheduling, fewer gaps.</div>
+            </div>
+          </Link>
 
-        <div className="pw-links" aria-label="Primary">
-          <NavLink to="/about" className={linkClass}>
-            About
-          </NavLink>
-          <NavLink to="/pricing" className={linkClass}>
-            Pricing
-          </NavLink>
-          <NavLink to="/contact" className={linkClass}>
-            Contact
-          </NavLink>
-          <NavLink to="/signup/therapist" className={linkClass}>
-            Therapist signup
-          </NavLink>
-          <NavLink to="/login" className={linkClass}>
-            Login
-          </NavLink>
+          <nav className="pw-links" aria-label="Primary">
+            <NavLink to="/about" className={linkClass}>
+              About
+            </NavLink>
+            <NavLink to="/pricing" className={linkClass}>
+              Pricing
+            </NavLink>
+            <NavLink to="/contact" className={linkClass}>
+              Contact
+            </NavLink>
+
+            {/* App links (optional but useful) */}
+            <NavLink to="/app" className={linkClass}>
+              Dashboard
+            </NavLink>
+
+            {/* Auth/CTA */}
+            <NavLink to="/login" className={linkClass}>
+              Login
+            </NavLink>
+            <Link to="/signup/therapist" className="pw-link pw-linkPrimary">
+              Start setup
+            </Link>
+          </nav>
         </div>
       </div>
-    </div>
+    </header>
   )
 }
 
@@ -52,12 +62,14 @@ function Shell({ children }) {
     <div className="pw-page">
       <div className="pw-bg" />
       <Nav />
-      <main className="pw-container pw-main">
-        <div className="pw-card pw-route">{children}</div>
+
+      <main className="pw-main">
+        <div className="pw-container">
+          <div className="pw-card pw-route">{children}</div>
+        </div>
       </main>
-      <footer className="pw-footer">
-        © {new Date().getFullYear()} Patchwerx
-      </footer>
+
+      <footer className="pw-footer">© {new Date().getFullYear()} Patchwerx</footer>
     </div>
   )
 }
@@ -66,6 +78,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Marketing */}
         <Route
           path="/"
           element={
@@ -98,6 +111,8 @@ export default function App() {
             </Shell>
           }
         />
+
+        {/* Auth */}
         <Route
           path="/signup/therapist"
           element={
@@ -133,6 +148,7 @@ export default function App() {
           }
         />
 
+        {/* Fallback */}
         <Route
           path="*"
           element={
