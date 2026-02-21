@@ -4,6 +4,7 @@ import PublicLayout from '../layouts/PublicLayout'
 import TherapistAppLayout from '../layouts/TherapistAppLayout'
 import ClientAppLayout from '../layouts/ClientAppLayout'
 import RequireAuth from './RequireAuth'
+import AuthCallback from "./pages/AuthCallback"
 
 import Home from '../pages/public/Home'
 import About from '../pages/public/About'
@@ -34,11 +35,15 @@ export default function AppRoutes() {
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/contact" element={<Contact />} />
 
-          {/* Auth */}
+          {/* Patchwerx Auth */}
           <Route path="/signup/therapist" element={<TherapistSignup />} />
           <Route path="/login/therapist" element={<TherapistLogin />} />
           <Route path="/signup/client" element={<ClientSignup />} />
           <Route path="/login/client" element={<ClientLogin />} />
+
+          {/* MS Outlook Auth */}
+          <Route path="/auth/cognito/callback" element={<AuthCallback />} />
+          <Route path="/auth/microsoft/callback" element={<MicrosoftCallback />} />
         </Route>
 
         {/* Therapist app */}
