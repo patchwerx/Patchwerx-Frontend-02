@@ -219,8 +219,7 @@ export default function TherapistSignup() {
         throw new Error(msg)
       }
 
-      // NEW: Store therapist_id if backend returns it
-      // Expecting: { therapist_id: "..." }
+      // ✅ THIS IS THE RIGHT PLACE
       if (data?.therapist_id) {
         localStorage.setItem('pw_therapist_id', String(data.therapist_id))
       }
@@ -298,11 +297,13 @@ export default function TherapistSignup() {
 
       const resp = await fetch(`${apiBase.replace(/\/$/, '')}/graph/subscriptions`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${tokenResp.accessToken}`,
-        },
-        body: JSON.stringify({ therapist_id }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          therapist_id,
+          access_token: tokenResp.accessToken,
+          // optional:
+          // resource: "/me/events"
+        }),
       })
 
       const data = await parseJsonSafe(resp)
