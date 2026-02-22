@@ -278,7 +278,22 @@ export default function TherapistSignup() {
    *  - create subscription in Graph
    *  - store subscription_id/clientState/expiration in DB
    */
+  console.log("FINISH_CLICKED", {
+    apiBase,
+    therapist_id: localStorage.getItem("pw_therapist_id"),
+    activeAccount: instance.getActiveAccount(),
+    accountsLen: accounts?.length,
+  });
+
   const createGraphSubscription = async () => {
+    
+    console.log("createGraphSubscription clicked", {
+      apiBase,
+      therapist_id: localStorage.getItem("pw_therapist_id"),
+      activeAccount: instance.getActiveAccount(),
+      accountsCount: accounts?.length
+    });
+      
     setCreatingSubscription(true)
     setSubscriptionError(null)
 
@@ -289,12 +304,15 @@ export default function TherapistSignup() {
 
       const account = getActiveAccount()
       if (!account) throw new Error('No Microsoft session found. Please click "Connect Outlook calendar" again.')
-
+      
+        console.log("ABOUT_TO_ACQUIRE_TOKEN");
       const tokenResp = await instance.acquireTokenSilent({
         scopes: loginRequest.scopes,
         account,
       })
 
+      console.log("API BASE:", apiBase);
+      console.log("ABOUT_TO_FETCH_SUBSCRIPTIONS", `${apiBase?.replace(/\/$/, '')}/graph/subscriptions`);
       const resp = await fetch(`${apiBase.replace(/\/$/, '')}/graph/subscriptions`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

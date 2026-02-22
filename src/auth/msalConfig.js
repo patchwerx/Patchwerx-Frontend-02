@@ -4,7 +4,7 @@ const clientId = process.env.REACT_APP_AAD_CLIENT_ID;
 const authority =
   process.env.REACT_APP_AAD_AUTHORITY || "https://login.microsoftonline.com/common";
 
-const redirectUri = `${window.location.origin}/auth/microsoft/callback`;
+const redirectUri = window.location.origin;
 
 console.log("MSAL clientId:", clientId);
 console.log("MSAL authority:", authority);
