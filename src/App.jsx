@@ -4,10 +4,10 @@ import About from './pages/About'
 import Pricing from './pages/Pricing'
 import Contact from './pages/Contact'
 import TherapistSignup from './pages/TherapistSignup'
+import ClientSignup from './pages/ClientSignup'
 import TherapistLogin from './pages/TherapistLogin'
 import Dashboard from './pages/Dashboard'
 import Waitlist from './pages/Waitlist'
-
 
 function Nav() {
   const baseLink = 'pw-link'
@@ -38,12 +38,10 @@ function Nav() {
               Contact
             </NavLink>
 
-            {/* App links (optional but useful) */}
             <NavLink to="/app" className={linkClass}>
               Dashboard
             </NavLink>
 
-            {/* Auth/CTA */}
             <NavLink to="/login" className={linkClass}>
               Login
             </NavLink>
@@ -78,7 +76,6 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Marketing */}
         <Route
           path="/"
           element={
@@ -112,12 +109,19 @@ export default function App() {
           }
         />
 
-        {/* Auth */}
         <Route
           path="/signup/therapist"
           element={
             <Shell>
               <TherapistSignup />
+            </Shell>
+          }
+        />
+        <Route
+          path="/signup/client"
+          element={
+            <Shell>
+              <ClientSignup />
             </Shell>
           }
         />
@@ -130,7 +134,6 @@ export default function App() {
           }
         />
 
-        {/* “App” pages (stubbed for now) */}
         <Route
           path="/app"
           element={
@@ -148,7 +151,6 @@ export default function App() {
           }
         />
 
-        {/* Fallback */}
         <Route
           path="*"
           element={

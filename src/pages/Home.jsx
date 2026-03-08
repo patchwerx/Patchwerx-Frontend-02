@@ -35,7 +35,6 @@ export default function Home() {
       <section className="pw-hero" style={{ paddingTop: 26, paddingBottom: 26, rowGap: 18 }}>
         {/* LEFT */}
         <div style={{ maxWidth: 720 }}>
-          
           <h1
             style={{
               margin: '14px 0 0',
@@ -67,12 +66,12 @@ export default function Home() {
             <Link className="pw-link pw-linkPrimary" to="/signup/therapist">
               Start therapist setup
             </Link>
-            <Link className="pw-link" to="/waitlist">
+            <Link className="pw-link" to="/signup/client">
               Join the waitlist
             </Link>
           </div>
 
-          {/* BIG BOLD PERCENTAGES */} 
+          {/* BIG BOLD PERCENTAGES */}
           <div
             style={{
               marginTop: 14,
@@ -149,7 +148,6 @@ export default function Home() {
               </span>
             </div>
           </div>
-
         </div>
 
         {/* RIGHT: VISUAL + MOTION */}
@@ -185,7 +183,9 @@ export default function Home() {
               animation: 'pwFloat 4.8s ease-in-out infinite',
             }}
           >
-            <div style={{ fontWeight: 950, fontSize: '1.05rem', color: 'rgba(2,6,23,0.92)' }}>How it works</div>
+            <div style={{ fontWeight: 950, fontSize: '1.05rem', color: 'rgba(2,6,23,0.92)' }}>
+              How it works
+            </div>
 
             <div style={{ marginTop: 12, display: 'grid', gap: 10 }}>
               {[
@@ -220,8 +220,8 @@ export default function Home() {
                         x.n === '1'
                           ? 'rgba(47,224,166,0.26)'
                           : x.n === '2'
-                          ? 'rgba(59,130,246,0.20)'
-                          : 'rgba(250,204,21,0.20)',
+                            ? 'rgba(59,130,246,0.20)'
+                            : 'rgba(250,204,21,0.20)',
                       border: '1px solid rgba(255,255,255,0.65)',
                     }}
                   >
@@ -229,7 +229,9 @@ export default function Home() {
                   </div>
                   <div>
                     <div style={{ fontWeight: 900, color: 'rgba(2,6,23,0.90)' }}>{x.t}</div>
-                    <div style={{ marginTop: 2, color: 'rgba(2,6,23,0.78)', fontWeight: 650 }}>{x.d}</div>
+                    <div style={{ marginTop: 2, color: 'rgba(2,6,23,0.78)', fontWeight: 650 }}>
+                      {x.d}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -292,7 +294,9 @@ export default function Home() {
             }}
           >
             <div style={{ fontWeight: 950, color: 'rgba(2,6,23,0.92)' }}>{x.t}</div>
-            <div style={{ marginTop: 6, color: 'rgba(2,6,23,0.78)', fontWeight: 650 }}>{x.d}</div>
+            <div style={{ marginTop: 6, color: 'rgba(2,6,23,0.78)', fontWeight: 650 }}>
+              {x.d}
+            </div>
           </div>
         ))}
       </section>
@@ -308,16 +312,17 @@ export default function Home() {
             justifyContent: 'space-between',
             gap: 12,
             flexWrap: 'wrap',
-            background:
-              'linear-gradient(135deg, rgba(255,255,255,0.90), rgba(255,255,255,0.70))',
+            background: 'linear-gradient(135deg, rgba(255,255,255,0.90), rgba(255,255,255,0.70))',
           }}
         >
-          <div style={{ fontWeight: 900, color: 'rgba(2,6,23,0.90)' }}>Ready to fill cancellations?</div>
+          <div style={{ fontWeight: 900, color: 'rgba(2,6,23,0.90)' }}>
+            Ready to fill cancellations?
+          </div>
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
             <Link className="pw-link pw-linkPrimary" to="/signup/therapist">
               Get started
             </Link>
-            <Link className="pw-link" to="/waitlist">
+            <Link className="pw-link" to="/signup/client">
               Join waitlist
             </Link>
           </div>

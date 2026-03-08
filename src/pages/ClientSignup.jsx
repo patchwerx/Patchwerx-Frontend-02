@@ -1,26 +1,65 @@
 import { useState } from 'react'
-import { useBrandStyles } from '../../ui/useBrandStyles'
+import { useBrandStyles } from '../ui/useBrandStyles'
 
 export default function ClientSignup() {
-  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
+  const [therapistPhone, setTherapistPhone] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [submitted, setSubmitted] = useState(false)
+
   const styles = useBrandStyles({ loading })
+  const apiBase = process.env.REACT_APP_API_BASE_URL
+
+  const parseJsonSafe = async (resp) => {
+    try {
+      return await resp.json()
+    } catch {
+      return null
+    }
+  }
 
   const submit = async (e) => {
     e.preventDefault()
     setLoading(true)
     setError(null)
+
     try {
-      // placeholder – likely invite-based
+      if (!apiBase) throw new Error('Missing REACT_APP_API_BASE_URL')
+      if (!email.trim()) throw new Error('Missing email')
       if (!phone.trim()) throw new Error('Missing phone')
+      if (!therapistPhone.trim()) throw new Error('Missing therapist phone')
+
+      const response = await fetch(`${apiBase.replace(/\/$/, '')}/clientSignup`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: email.trim(),
+          phone: phone.trim(),
+          therapist_phone: therapistPhone.trim(),
+          actor_type: 'CLIENT',
+        }),
+      })
+
+      const data = await parseJsonSafe(response)
+
+      if (!response.ok) {
+        const msg = data?.error || data?.message || 'Signup failed'
+        throw new Error(msg)
+      }
+
       setSubmitted(true)
-      setName('')
+      setEmail('')
       setPhone('')
+      setTherapistPhone('')
     } catch (err) {
-      setError('Signup failed.')
+      console.error(err)
+      setError(
+        err?.message === 'Missing REACT_APP_API_BASE_URL'
+          ? 'Config error: missing API base URL. Check your .env and restart the dev server.'
+          : err?.message || 'Something went wrong. Please try again.'
+      )
     } finally {
       setLoading(false)
     }
@@ -28,26 +67,27 @@ export default function ClientSignup() {
 
   return (
     <div style={{ display: 'grid', gap: 12 }}>
-      <h2 style={styles.h2}>Client signup</h2>
+      <h2 style={styles.h2}>Join the waitlist</h2>
 
       {!submitted ? (
         <form onSubmit={submit} style={styles.form}>
           <div>
-            <label style={styles.label} htmlFor="name">
-              Name
+            <label style={styles.label} htmlFor="email">
+              Email
             </label>
             <input
-              id="name"
+              id="email"
               style={styles.field}
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              type="text"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              type="email"
+              required
             />
           </div>
 
           <div>
             <label style={styles.label} htmlFor="phone">
-              Phone
+              Your phone number
             </label>
             <input
               id="phone"
@@ -59,14 +99,28 @@ export default function ClientSignup() {
             />
           </div>
 
+          <div>
+            <label style={styles.label} htmlFor="therapistPhone">
+              Your therapist&apos;s phone number
+            </label>
+            <input
+              id="therapistPhone"
+              style={styles.field}
+              value={therapistPhone}
+              onChange={(e) => setTherapistPhone(e.target.value)}
+              type="tel"
+              required
+            />
+          </div>
+
           <button type="submit" style={styles.button} disabled={loading}>
-            {loading ? 'Submitting…' : 'Create account'}
+            {loading ? 'Submitting…' : 'Join waitlist'}
           </button>
 
           {error && <div style={styles.error}>{error}</div>}
         </form>
       ) : (
-        <p style={styles.subtleText}>Thanks — you’re set.</p>
+        <p style={styles.subtleText}>Thanks — you&apos;re on the waitlist.</p>
       )}
     </div>
   )
