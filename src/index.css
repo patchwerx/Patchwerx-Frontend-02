@@ -1,38 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
 :root {
-  /* --- Typography / ink --- */
-  --text: rgba(2, 6, 23, 0.92);
-  --muted: rgba(2, 6, 23, 0.64);
+  /* --- Dark academia (cozy dark mode, with lighter variation) --- */
+  --font-heading: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Crimson Pro', Georgia, serif;
 
-  /* --- Glass surfaces (calm, airy) --- */
-  --card: rgba(255, 255, 255, 0.78);
-  --card2: rgba(236, 255, 243, 0.62);
-  --stroke: rgba(16, 185, 129, 0.18);
+  --ink: rgba(252, 248, 240, 0.96);
+  --ink-muted: rgba(245, 240, 230, 0.82);
+  --ink-faint: rgba(235, 228, 218, 0.6);
 
-  /* --- Accents --- */
-  --green: #22c55e;
-  --greenSoft: rgba(34, 197, 94, 0.14);
-  --blue: #3b82f6;
-  --blueSoft: rgba(59, 130, 246, 0.12);
+  --bg-dark: #1e1b18;
+  --bg-page: #2a2520;
+  --bg-card: rgba(62, 55, 48, 0.94);
+  --bg-card-alt: rgba(72, 63, 55, 0.92);
+  --bg-elevated: rgba(82, 72, 62, 0.96);
+  --border: rgba(170, 145, 110, 0.45);
+  --border-strong: rgba(190, 165, 125, 0.55);
 
-  /* --- Depth (lighter, more modern) --- */
-  --shadow: 0 18px 52px rgba(0, 0, 0, 0.22);
-  --shadowSoft: 0 10px 26px rgba(0, 0, 0, 0.16);
+  --accent: #c9a962;
+  --accent-soft: rgba(201, 169, 98, 0.28);
+  --accent-glow: rgba(201, 169, 98, 0.22);
+  --wine: rgba(139, 90, 90, 0.5);
+  --forest: rgba(60, 75, 60, 0.5);
+  --error: #c97a7a;
 
-  /* --- Shape + rhythm --- */
-  --radius: 20px;
-  --radiusSm: 16px;
-  --radiusXs: 12px;
+  --shadow: 0 20px 50px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.12);
+  --shadow-soft: 0 12px 28px rgba(0, 0, 0, 0.25);
+
+  --radius: 12px;
+  --radiusSm: 10px;
+  --radiusXs: 6px;
 
   --container: 1120px;
-  --padX: 18px;
+  --padX: 20px;
 
-  /* --- Motion --- */
-  --ease: cubic-bezier(.2,.8,.2,1);
-  --fast: 140ms;
-  --med: 220ms;
+  --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --fast: 160ms;
+  --med: 240ms;
 
-  /* --- Focus --- */
-  --focus: 0 0 0 4px rgba(34, 197, 94, 0.22);
+  --focus: 0 0 0 2px var(--accent);
 }
 
 * { box-sizing: border-box; }
@@ -40,50 +46,34 @@ html, body { height: 100%; }
 
 body {
   margin: 0;
-  color: var(--text);
-  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial,
-    "Apple Color Emoji", "Segoe UI Emoji";
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 1.05rem;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: var(--bg-page);
 }
 
-/* ---------- Background (calm, subtle motion) ---------- */
+/* ---------- Background: library + cozy dark overlay ---------- */
 .pw-bg {
   position: fixed;
   inset: 0;
   z-index: -3;
-
-  background:
-    radial-gradient(1100px 780px at 18% 10%, rgba(34,197,94,0.18), transparent 60%),
-    radial-gradient(980px 720px at 85% 18%, rgba(59,130,246,0.12), transparent 62%),
-    linear-gradient(180deg, rgba(2,6,23,0.56) 0%, rgba(2,6,23,0.30) 42%, rgba(2,6,23,0.60) 100%),
-    url("https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=2400&q=80");
-  background-size: cover;
-  background-position: center;
-  transform: scale(1.02);
-  filter: saturate(1.02) contrast(1.02);
+  background: url("https://images.unsplash.com/photo-1533327325824-76bc4e62d560?auto=format&fit=crop&w=1920&q=85") center / cover fixed;
 }
 
-.pw-bg::after {
+/* Dark cozy overlay — slightly lighter so the library shows through a bit more */
+.pw-bg::before {
   content: "";
   position: absolute;
-  inset: -22%;
+  inset: 0;
   z-index: -2;
-
-  background:
-    radial-gradient(900px 600px at 20% 20%, rgba(34,197,94,0.10), transparent 56%),
-    radial-gradient(900px 600px at 80% 15%, rgba(59,130,246,0.08), transparent 58%),
-    linear-gradient(120deg, rgba(2,6,23,0.20) 0%, rgba(2,6,23,0.14) 45%, rgba(2,6,23,0.20) 100%);
-  animation: pwAmbient 26s var(--ease) infinite alternate;
-  will-change: transform, opacity;
+  background: linear-gradient(180deg, rgba(32, 28, 24, 0.82) 0%, rgba(42, 36, 30, 0.84) 50%, rgba(38, 33, 28, 0.86) 100%);
+  pointer-events: none;
 }
 
-@keyframes pwAmbient {
-  0%   { transform: translate3d(-1%, -0.5%, 0) rotate(-0.12deg); opacity: 0.92; }
-  100% { transform: translate3d( 1%,  0.5%, 0) rotate( 0.12deg); opacity: 0.84; }
-}
-
+/* Subtle warm glow from “fireplace” side (left) for coziness */
 /* ---------- Layout ---------- */
 .pw-page {
   min-height: 100vh;
@@ -95,39 +85,34 @@ body {
   width: 100%;
   max-width: var(--container);
   margin: 0 auto;
-  padding: 5px var(--padX) 5px;
+  padding: 8px var(--padX);
 }
 
-/* More consistent section rhythm */
 .pw-home { padding: 9vh 0; }
 .pw-section { padding: clamp(34px, 6vh, 82px) 0; }
-.pw-heroSection {
-  padding-top: clamp(46px, 9vh, 110px);
-  padding-bottom: clamp(46px, 9vh, 110px);
-}
+.pw-heroSection { padding-top: clamp(46px, 9vh, 110px); padding-bottom: clamp(46px, 9vh, 110px); }
 .pw-sectionEnd { padding-bottom: clamp(60px, 10vh, 120px); }
 
 .pw-sectionTitle {
-  font-weight: 900;
-  font-size: 1.18rem;
-  letter-spacing: -0.012em;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.35rem;
+  letter-spacing: 0.02em;
   margin: 0 0 clamp(14px, 2vh, 22px);
-  color: rgba(2, 6, 23, 0.90);
+  color: var(--ink);
 }
 
-/* ---------- Nav (lighter + cleaner) ---------- */
+/* ---------- Nav ---------- */
 .pw-nav {
   position: sticky;
   top: 0;
   z-index: 20;
-  padding: 4px 0;
-
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-
-  background:
-    linear-gradient(180deg, #ecfdf5ad, rgba(220,252,231,0.44));
-  border-bottom: 1px solid rgba(16,185,129,0.16);
+  padding: 10px 0;
+  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 1px 0 rgba(201, 169, 98, 0.1) inset;
 }
 
 .pw-nav-inner {
@@ -135,26 +120,25 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 50px;
-  min-height: 40px;
+  min-height: 44px;
 }
 
 .pw-brand {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   text-decoration: none;
-  color: rgba(2,6,23,0.92);
+  color: var(--ink);
   min-width: 0;
 }
 
 .pw-logo {
-  width: 50px;
-  height: 50px;
-  border-radius: 12px;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radiusSm);
   overflow: hidden;
-  border: 3px solid rgba(2,6,23,0.08);
-  box-shadow: var(--shadowSoft);
-  background: rgba(255,255,255,0.65);
+  border: 1px solid var(--border);
+  background: var(--bg-card);
   display: grid;
   place-items: center;
 }
@@ -166,62 +150,56 @@ body {
   display: block;
 }
 
-.pw-brandText {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.35;
-  min-width: 0;
+.pw-logoMark {
+  width: 100%;
+  height: 100%;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: var(--radiusXs);
+  background: linear-gradient(135deg, var(--accent-soft), rgba(201, 169, 98, 0.35));
+  border: 1px solid var(--border);
 }
 
+.pw-brandText { display: flex; flex-direction: column; line-height: 1.3; min-width: 0; }
+
 .pw-brandTitle {
-  font-weight: 850;
-  letter-spacing: -0.02em;
-  font-size: 1.50rem;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.45rem;
+  letter-spacing: 0.02em;
+  color: var(--ink);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .pw-brandSub {
-  font-size: 1.25rem;
-  color: rgba(2, 6, 23, 0.60);
-  margin-top: 3px;
+  font-size: 0.9rem;
+  color: var(--ink-muted);
+  margin-top: 2px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* Nav links feel “button-y” but softer */
+.pw-links { display: flex; align-items: center; gap: 8px; }
+
 .pw-link {
   text-decoration: none;
-  color: rgba(2, 6, 23, 0.82);
-  font-weight: 750;
-  font-size: 1.00rem;
-  padding: 6px 10px;
-  border-radius: 12px;
-
-  border: 1px solid rgba(0, 24, 16, 0.14);
-  background: rgba(236,253,245,0.50);
-
-  transition:
-    transform var(--fast) var(--ease),
-    background var(--fast) var(--ease),
-    border-color var(--fast) var(--ease),
-    box-shadow var(--fast) var(--ease);
+  color: var(--ink-muted);
+  font-weight: 600;
+  font-size: 0.98rem;
+  padding: 8px 12px;
+  border-radius: var(--radiusSm);
+  border: 1px solid transparent;
+  background: transparent;
+  transition: color var(--fast) var(--ease), background var(--fast) var(--ease), border-color var(--fast) var(--ease);
 }
-
-.pw-links {
-  display: flex;
-  align-items: center;
-  gap: 6px;   /* controls space between buttons */
-}
-
 
 .pw-link:hover {
-  transform: translateY(-1px);
-  background: rgba(236,253,245,0.64);
-  border-color: rgba(16,185,129,0.20);
-  box-shadow: 0 10px 22px rgba(0,0,0,0.10);
+  color: var(--ink);
+  background: var(--accent-soft);
+  border-color: var(--border);
 }
 
 .pw-link:focus-visible {
@@ -230,24 +208,98 @@ body {
 }
 
 .pw-link.isActive {
-  background: rgba(220,252,231,0.66);
-  border-color: rgba(16,185,129,0.24);
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-color: var(--border);
 }
 
-/* ---------- Main marketing card ---------- */
-.pw-main { padding-top: clamp(18px, 4vh, 44px); }
+.pw-linkPrimary {
+  color: #1c1916 !important;
+  background: var(--accent) !important;
+  border-color: var(--accent) !important;
+}
+.pw-linkPrimary:hover {
+  background: #d4b872 !important;
+  border-color: #d4b872 !important;
+  color: #1c1916 !important;
+}
+.pw-linkPrimary:focus-visible { box-shadow: var(--focus); }
+
+/* ---------- Main card ---------- */
+.pw-main { padding-top: clamp(20px, 4vh, 48px); }
 
 .pw-card {
   border-radius: var(--radius);
-  padding: clamp(20px, 3.2vw, 30px);
-
-  background: linear-gradient(180deg, var(--card), var(--card2));
-  border: 1px solid var(--stroke);
-
-  box-shadow: var(--shadow), 0 1px 0 rgba(255,255,255,0.16) inset;
-  backdrop-filter: blur(1px);
-  -webkit-backdrop-filter: blur(12px);
+  padding: clamp(24px, 3.5vw, 36px);
+  background: linear-gradient(180deg, var(--bg-card) 0%, var(--bg-card-alt) 100%);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  transition: box-shadow var(--fast) var(--ease);
 }
+.pw-card:hover {
+  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(201, 169, 98, 0.12);
+}
+
+.pw-card h2 {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  margin: 0 0 0.5em 0;
+  line-height: 1.3;
+}
+.pw-card .pw-lead { margin-top: 0; color: var(--ink-muted); }
+
+/* ---------- Form ---------- */
+.pw-form { display: flex; flex-direction: column; gap: 1rem; max-width: 400px; }
+
+.pw-label {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ink-muted);
+  margin-bottom: 0.35rem;
+}
+
+.pw-input {
+  width: 100%;
+  padding: 0.65rem 0.9rem;
+  font-size: 1rem;
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: rgba(48, 42, 36, 0.95);
+  border: 1px solid var(--border);
+  border-radius: var(--radiusSm);
+  outline: none;
+  transition: border-color var(--fast) var(--ease), box-shadow var(--fast) var(--ease);
+}
+.pw-input::placeholder { color: var(--ink-faint); }
+.pw-input:hover { border-color: var(--border-strong); }
+.pw-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-glow);
+}
+
+.pw-btn {
+  align-self: flex-start;
+  padding: 0.65rem 1.25rem;
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: var(--font-body);
+  color: #1c1916;
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: var(--radiusSm);
+  cursor: pointer;
+  transition: transform var(--fast) var(--ease), filter var(--fast) var(--ease);
+}
+.pw-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.12);
+}
+.pw-btn:focus-visible { outline: none; box-shadow: var(--focus); }
+.pw-btn:active { transform: translateY(0); }
 
 /* ---------- Hero ---------- */
 .pw-hero {
@@ -261,28 +313,29 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 7px 11px;
+  padding: 6px 12px;
   border-radius: 999px;
-  font-weight: 850;
-  font-size: 0.82rem;
-  color: rgba(2,6,23,0.74);
-
-  background: rgba(236,253,245,0.56);
-  border: 1px solid rgba(16,185,129,0.16);
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--bg-page);
+  background: var(--accent);
+  border: 1px solid rgba(201, 169, 98, 0.6);
 }
 
 .pw-h1 {
-  font-size: clamp(2.05rem, 4vw, 2.45rem);
-  line-height: 1.05;
-  letter-spacing: -0.035em;
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  line-height: 1.15;
+  letter-spacing: 0.02em;
   margin: 12px 0 0 0;
+  color: var(--ink);
 }
 
 .pw-lead {
   margin: 10px 0 0 0;
-  color: var(--muted);
-  line-height: 1.68;
-  font-size: 1.03rem;
+  color: var(--ink-muted);
+  line-height: 1.65;
+  font-size: 1.05rem;
   max-width: 62ch;
 }
 
@@ -294,21 +347,21 @@ body {
   align-items: center;
 }
 
-.pw-miniNote {
-  margin-top: 10px;
-  color: rgba(2,6,23,0.60);
-  font-size: 0.90rem;
-}
+.pw-miniNote { margin-top: 10px; color: var(--ink-faint); font-size: 0.9rem; }
 
-/* ---------- Panels / features ---------- */
+/* ---------- Panels ---------- */
 .pw-panel {
   border-radius: var(--radiusSm);
-  padding: 16px;
+  padding: 18px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-soft);
+}
 
-  background: rgba(236,253,245,0.52);
-  border: 1px solid rgba(16,185,129,0.14);
-
-  box-shadow: 0 12px 28px rgba(0,0,0,0.10);
+/* Slightly lighter panel for variety (e.g. hero asides, alternate blocks) */
+.pw-panel-elevated {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
 }
 
 .pw-grid3 {
@@ -318,15 +371,10 @@ body {
   gap: 14px;
 }
 
-.pw-featureTitle { font-weight: 900; margin: 0 0 6px 0; }
-.pw-featureText { margin: 0; color: rgba(2,6,23,0.70); line-height: 1.62; }
+.pw-featureTitle { font-family: var(--font-heading); font-weight: 700; margin: 0 0 6px 0; color: var(--ink); }
+.pw-featureText { margin: 0; color: var(--ink-muted); line-height: 1.6; }
 
-/* Steps (cleaner + less heavy borders) */
-.pw-steps {
-  margin-top: 18px;
-  display: grid;
-  gap: 12px;
-}
+.pw-steps { margin-top: 18px; display: grid; gap: 12px; }
 
 .pw-step {
   display: flex;
@@ -334,55 +382,55 @@ body {
   align-items: flex-start;
   padding: 14px;
   border-radius: var(--radiusSm);
-
-  background: rgba(236,253,245,0.50);
-  border: 1px solid rgba(16,185,129,0.14);
-
+  background: var(--bg-card);
+  border: 1px solid var(--border);
   transition: transform var(--fast) var(--ease), box-shadow var(--fast) var(--ease);
 }
-
 .pw-step:hover {
   transform: translateY(-1px);
-  box-shadow: 0 14px 30px rgba(0,0,0,0.12);
+  box-shadow: var(--shadow-soft);
 }
 
 .pw-stepNum {
   width: 30px;
   height: 30px;
-  border-radius: 12px;
+  border-radius: 50%;
   display: grid;
   place-items: center;
-
-  font-weight: 900;
-  color: rgba(2,6,23,0.92);
-  background: linear-gradient(135deg, rgba(34,197,94,0.78), rgba(59,130,246,0.40));
-  border: 1px solid rgba(255,255,255,0.40);
+  font-weight: 700;
+  color: #1c1916;
+  background: var(--accent);
+  border: 1px solid var(--accent);
   flex: 0 0 auto;
 }
 
-/* Route transition: a touch slower + smoother */
 .pw-route { animation: pwFadeUp var(--med) var(--ease) both; }
 @keyframes pwFadeUp {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* ---------- Final CTA helpers ---------- */
 .pw-finalCta { padding: clamp(18px, 3vh, 28px); }
-.pw-finalTitle {
-  font-weight: 950;
-  font-size: 1.18rem;
-  margin: 0 0 6px 0;
+.pw-finalTitle { font-family: var(--font-heading); font-weight: 700; font-size: 1.2rem; margin: 0 0 6px 0; color: var(--ink); }
+.pw-finalText { margin: 0; line-height: 1.65; color: var(--ink-muted); }
+
+/* ---------- Waitlist table ---------- */
+.pw-waitlist-table-wrap {
+  border-radius: var(--radiusSm);
+  background: var(--bg-card-alt);
+  border: 1px solid var(--border);
 }
-.pw-finalText { margin: 0; line-height: 1.65; opacity: 0.86; }
+.pw-waitlist-table tbody tr:hover {
+  background: var(--accent-soft);
+}
 
 /* ---------- Footer ---------- */
 .pw-footer {
-  padding: 18px 0 28px;
+  margin-top: auto;
+  padding: 24px 0 32px;
   text-align: center;
-  color: rgba(255, 255, 255, 0.84);
-  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.45);
-  font-size: 0.92rem;
+  color: var(--ink-muted);
+  font-size: 0.9rem;
 }
 
 /* ---------- Responsive ---------- */
@@ -393,4 +441,6 @@ body {
 
 @media (max-width: 760px) {
   .pw-brandSub { display: none; }
+  .pw-nav-inner { gap: 12px; flex-wrap: wrap; }
+  .pw-links { flex-wrap: wrap; }
 }

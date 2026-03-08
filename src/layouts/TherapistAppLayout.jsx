@@ -18,11 +18,8 @@ function TherapistNav() {
         </Link>
 
         <div className="pw-links" aria-label="Therapist">
-          <NavLink to="/app" end className={linkClass}>
-            Dashboard
-          </NavLink>
           <NavLink to="/app/waitlist" className={linkClass}>
-            Waitlist
+            Dashboard
           </NavLink>
           <NavLink to="/app/settings" className={linkClass}>
             Settings

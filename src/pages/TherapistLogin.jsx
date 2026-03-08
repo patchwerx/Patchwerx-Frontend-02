@@ -1,18 +1,35 @@
 import { useState } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useTherapistAuth } from '../context/TherapistAuthContext'
 
 export default function TherapistLogin() {
   const [email, setEmail] = useState('')
+  const [error, setError] = useState(null)
+  const { login } = useTherapistAuth()
+  const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const redirectTo = searchParams.get('redirect') || '/app'
 
   const submit = (e) => {
     e.preventDefault()
-    // placeholder: wire to real auth later
-    alert(`Logged in (stub) as ${email}`)
+    setError(null)
+    if (!email.trim()) {
+      setError('Please enter your email.')
+      return
+    }
+    if (login(email.trim())) {
+      navigate(redirectTo, { replace: true })
+    } else {
+      setError('Please enter a valid email.')
+    }
   }
 
   return (
     <div>
-      <h2>Login</h2>
-      <p className="pw-lead">Stub login for now — we’ll connect real auth next.</p>
+      <h2>Therapist login</h2>
+      <p className="pw-lead">
+        Sign in to access your dashboard and waitlist.
+      </p>
 
       <form className="pw-form" onSubmit={submit}>
         <div>
@@ -25,9 +42,16 @@ export default function TherapistLogin() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             type="email"
+            placeholder="you@practice.com"
             required
+            autoComplete="email"
           />
         </div>
+        {error && (
+          <p className="pw-lead" style={{ margin: 0, color: 'var(--error)', fontSize: '0.9rem' }}>
+            {error}
+          </p>
+        )}
         <button className="pw-btn" type="submit">
           Sign in
         </button>

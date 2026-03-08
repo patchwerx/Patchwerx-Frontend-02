@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route, NavLink, Link } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, NavLink, Link, Navigate, useLocation } from 'react-router-dom'
+import { TherapistAuthProvider, useTherapistAuth } from './context/TherapistAuthContext'
 import Home from './pages/Home'
 import About from './pages/About'
 import Pricing from './pages/Pricing'
@@ -9,9 +10,20 @@ import TherapistLogin from './pages/TherapistLogin'
 import Dashboard from './pages/Dashboard'
 import Waitlist from './pages/Waitlist'
 
+function ProtectedRoute({ children }) {
+  const { isAuthenticated } = useTherapistAuth()
+  const location = useLocation()
+  if (!isAuthenticated) {
+    const redirect = encodeURIComponent(location.pathname)
+    return <Navigate to={`/login?redirect=${redirect}`} replace />
+  }
+  return children
+}
+
 function Nav() {
   const baseLink = 'pw-link'
   const linkClass = ({ isActive }) => `${baseLink} ${isActive ? 'isActive' : ''}`
+  const { isAuthenticated, logout } = useTherapistAuth()
 
   return (
     <header className="pw-nav" role="banner">
@@ -28,6 +40,9 @@ function Nav() {
           </Link>
 
           <nav className="pw-links" aria-label="Primary">
+            <NavLink to="/" className={linkClass} end>
+              Home
+            </NavLink>
             <NavLink to="/about" className={linkClass}>
               About
             </NavLink>
@@ -38,16 +53,30 @@ function Nav() {
               Contact
             </NavLink>
 
-            <NavLink to="/app" className={linkClass}>
-              Dashboard
-            </NavLink>
-
-            <NavLink to="/login" className={linkClass}>
-              Login
-            </NavLink>
-            <Link to="/signup/therapist" className="pw-link pw-linkPrimary">
-              Start setup
-            </Link>
+            {isAuthenticated ? (
+              <>
+                <NavLink to="/app/waitlist" className={linkClass}>
+                  Dashboard
+                </NavLink>
+                <button
+                  type="button"
+                  className="pw-link"
+                  onClick={logout}
+                  style={{ border: 'none', cursor: 'pointer', font: 'inherit' }}
+                >
+                  Log out
+                </button>
+              </>
+            ) : (
+              <>
+                <NavLink to="/login" className={linkClass}>
+                  Login
+                </NavLink>
+                <Link to="/signup/therapist" className="pw-link pw-linkPrimary">
+                  Start setup
+                </Link>
+              </>
+            )}
           </nav>
         </div>
       </div>
@@ -75,91 +104,97 @@ function Shell({ children }) {
 export default function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <Shell>
-              <Home />
-            </Shell>
-          }
-        />
-        <Route
-          path="/about"
-          element={
-            <Shell>
-              <About />
-            </Shell>
-          }
-        />
-        <Route
-          path="/pricing"
-          element={
-            <Shell>
-              <Pricing />
-            </Shell>
-          }
-        />
-        <Route
-          path="/contact"
-          element={
-            <Shell>
-              <Contact />
-            </Shell>
-          }
-        />
+      <TherapistAuthProvider>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <Shell>
+                <Home />
+              </Shell>
+            }
+          />
+          <Route
+            path="/about"
+            element={
+              <Shell>
+                <About />
+              </Shell>
+            }
+          />
+          <Route
+            path="/pricing"
+            element={
+              <Shell>
+                <Pricing />
+              </Shell>
+            }
+          />
+          <Route
+            path="/contact"
+            element={
+              <Shell>
+                <Contact />
+              </Shell>
+            }
+          />
 
-        <Route
-          path="/signup/therapist"
-          element={
-            <Shell>
-              <TherapistSignup />
-            </Shell>
-          }
-        />
-        <Route
-          path="/signup/client"
-          element={
-            <Shell>
-              <ClientSignup />
-            </Shell>
-          }
-        />
-        <Route
-          path="/login"
-          element={
-            <Shell>
-              <TherapistLogin />
-            </Shell>
-          }
-        />
+          <Route
+            path="/signup/therapist"
+            element={
+              <Shell>
+                <TherapistSignup />
+              </Shell>
+            }
+          />
+          <Route
+            path="/signup/client"
+            element={
+              <Shell>
+                <ClientSignup />
+              </Shell>
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <Shell>
+                <TherapistLogin />
+              </Shell>
+            }
+          />
 
-        <Route
-          path="/app"
-          element={
-            <Shell>
-              <Dashboard />
-            </Shell>
-          }
-        />
-        <Route
-          path="/app/waitlist"
-          element={
-            <Shell>
-              <Waitlist />
-            </Shell>
-          }
-        />
+          <Route
+            path="/app"
+            element={
+              <ProtectedRoute>
+                <Shell>
+                  <Dashboard />
+                </Shell>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/app/waitlist"
+            element={
+              <ProtectedRoute>
+                <Shell>
+                  <Waitlist />
+                </Shell>
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="*"
-          element={
-            <Shell>
-              <Home />
-            </Shell>
-          }
-        />
-      </Routes>
+          <Route
+            path="*"
+            element={
+              <Shell>
+                <Home />
+              </Shell>
+            }
+          />
+        </Routes>
+      </TherapistAuthProvider>
     </BrowserRouter>
   )
 }

@@ -2,67 +2,36 @@ import { Link } from 'react-router-dom'
 
 export default function Home() {
   return (
-    <div style={{ paddingBottom: 28 }}>
-      {/* LOCAL KEYFRAMES (simple + smooth) */}
+    <div className="pw-home-page" style={{ paddingBottom: 40 }}>
       <style>{`
         @keyframes pwFloat {
           0%   { transform: translate3d(0, 0, 0); }
-          50%  { transform: translate3d(0, -10px, 0); }
+          50%  { transform: translate3d(0, -8px, 0); }
           100% { transform: translate3d(0, 0, 0); }
         }
         @keyframes pwGlow {
-          0%   { opacity: .65; transform: scale(1); }
-          50%  { opacity: .95; transform: scale(1.03); }
-          100% { opacity: .65; transform: scale(1); }
-        }
-        @keyframes pwSheen {
-          0%   { transform: translateX(-120%) skewX(-18deg); opacity: 0; }
-          20%  { opacity: .55; }
-          50%  { opacity: .25; }
-          100% { transform: translateX(220%) skewX(-18deg); opacity: 0; }
-        }
-        @keyframes pwPulseDot {
-          0% { transform: scale(1); opacity: .85; }
-          55% { transform: scale(1.45); opacity: .45; }
-          100% { transform: scale(1); opacity: .85; }
+          0%   { opacity: .7; transform: scale(1); }
+          50%  { opacity: .9; transform: scale(1.02); }
+          100% { opacity: .7; transform: scale(1); }
         }
         @media (prefers-reduced-motion: reduce) {
           .pw-motion, .pw-motion * { animation: none !important; transition: none !important; }
         }
       `}</style>
 
-      {/* HERO */}
-      <section className="pw-hero" style={{ paddingTop: 26, paddingBottom: 26, rowGap: 18 }}>
-        {/* LEFT */}
-        <div style={{ maxWidth: 720 }}>
-          <h1
-            style={{
-              margin: '14px 0 0',
-              fontSize: 'clamp(2.2rem, 4.4vw, 3.25rem)',
-              lineHeight: 1.04,
-              letterSpacing: '-0.03em',
-              color: 'rgba(2,6,23,0.93)',
-              textShadow: '0 1px 0 rgba(255,255,255,0.7)',
-            }}
-          >
+      {/* Hero */}
+      <section className="pw-hero" style={{ paddingTop: 32, paddingBottom: 36, rowGap: 24, alignItems: 'center' }}>
+        <div style={{ maxWidth: 640 }}>
+          <p className="pw-kicker" style={{ marginBottom: 12 }}>
+            Calm scheduling, fewer gaps
+          </p>
+          <h1 className="pw-h1" style={{ margin: 0, fontSize: 'clamp(2.25rem, 4.5vw, 3rem)', lineHeight: 1.1 }}>
             Patchwerx
           </h1>
-
-          <p
-            style={{
-              marginTop: 12,
-              fontSize: '1.08rem',
-              lineHeight: 1.65,
-              color: 'rgba(2,6,23,0.82)',
-              fontWeight: 520,
-              maxWidth: 640,
-              textShadow: '0 1px 0 rgba(255,255,255,0.6)',
-            }}
-          >
-            Patchwerx spots an open slot, texts eligible clients, and books the first yes—then updates your calendar.
+          <p className="pw-lead" style={{ marginTop: 16, marginBottom: 0, fontSize: '1.1rem', maxWidth: '32em' }}>
+            SaaS that integrates your platforms and automatically reschedules another client from your priority waitlist when someone cancels—so your calendar stays full.
           </p>
-
-          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginTop: 16 }}>
+          <div className="pw-ctaRow" style={{ marginTop: 24 }}>
             <Link className="pw-link pw-linkPrimary" to="/signup/therapist">
               Start therapist setup
             </Link>
@@ -71,252 +40,186 @@ export default function Home() {
             </Link>
           </div>
 
-          {/* BIG BOLD PERCENTAGES */}
-          <div
-            style={{
-              marginTop: 14,
-              display: 'grid',
-              gap: 10,
-              color: 'rgba(2,6,23,0.90)',
-            }}
-          >
+          {/* Stats */}
+          <div style={{ marginTop: 28, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 14 }}>
             <div
+              className="pw-panel"
               style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                alignItems: 'baseline',
-                gap: 10,
-                padding: '12px 14px',
-                borderRadius: 16,
-                background: 'rgba(255, 169, 169, 0.7)',
-                border: '1px solid rgba(255,255,255,0.55)',
-                boxShadow: '0 12px 30px rgba(0,0,0,0.08)',
+                padding: '14px 18px',
+                background: 'var(--bg-card)',
+                border: '1px solid rgba(139, 115, 85, 0.35)',
+                borderRadius: 8,
               }}
             >
-              <span
-                style={{
-                  fontSize: '2.05rem',
-                  lineHeight: 1,
-                  fontWeight: 900,
-                  letterSpacing: '-0.02em',
-                }}
-              >
+              <div style={{ fontSize: '1.75rem', fontWeight: 700, letterSpacing: '0.02em', color: 'var(--error)' }}>
                 30%
-              </span>
-              <span
-                style={{
-                  fontSize: '1.02rem',
-                  fontWeight: 750,
-                  color: 'rgba(2,6,23,0.82)',
-                }}
-              >
-                no-show rate <span style={{ fontWeight: 800 }}>without Patchwerx</span>
-              </span>
+              </div>
+              <div style={{ fontSize: '0.9rem', color: 'var(--ink-muted)', marginTop: 4, lineHeight: 1.4 }}>
+                no-show rate <strong>without</strong> Patchwerx
+              </div>
             </div>
-
             <div
+              className="pw-panel"
               style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                alignItems: 'baseline',
-                gap: 10,
-                padding: '12px 14px',
-                borderRadius: 16,
-                background: 'rgba(47,224,166,0.18)',
-                border: '1px solid rgba(255,255,255,0.55)',
-                boxShadow: '0 12px 30px rgba(0,0,0,0.08)',
+                padding: '14px 18px',
+                background: 'var(--bg-card)',
+                border: '1px solid var(--border)',
+                borderRadius: 8,
               }}
             >
-              <span
-                style={{
-                  fontSize: '2.05rem',
-                  lineHeight: 1,
-                  fontWeight: 900,
-                  letterSpacing: '-0.02em',
-                }}
-              >
+              <div style={{ fontSize: '1.75rem', fontWeight: 700, letterSpacing: '0.02em', color: 'var(--accent)' }}>
                 5%
-              </span>
-              <span
-                style={{
-                  fontSize: '1.02rem',
-                  fontWeight: 750,
-                  color: 'rgba(2,6,23,0.82)',
-                }}
-              >
-                no-show rate <span style={{ fontWeight: 800 }}>with Patchwerx</span>
-              </span>
+              </div>
+              <div style={{ fontSize: '0.9rem', color: 'var(--ink-muted)', marginTop: 4, lineHeight: 1.4 }}>
+                no-show rate <strong>with</strong> Patchwerx
+              </div>
             </div>
           </div>
         </div>
 
-        {/* RIGHT: VISUAL + MOTION */}
+        {/* How it works */}
         <aside
-          className="pw-panel pw-motion"
+          className="pw-panel pw-panel-elevated pw-motion"
           style={{
-            padding: 18,
-            maxWidth: 480,
+            padding: 24,
+            maxWidth: 420,
             overflow: 'hidden',
             position: 'relative',
             transform: 'translateZ(0)',
           }}
         >
-          {/* animated glow layer */}
           <div
             aria-hidden="true"
             style={{
               position: 'absolute',
               inset: -2,
-              background:
-                'radial-gradient(700px 320px at 15% 10%, rgba(47,224,166,0.42), transparent 55%), radial-gradient(700px 320px at 90% 30%, rgba(59,130,246,0.34), transparent 60%), radial-gradient(700px 320px at 40% 95%, rgba(250,204,21,0.20), transparent 62%)',
+              background: 'radial-gradient(500px 240px at 30% 20%, rgba(201,169,98,0.12), transparent 55%)',
               filter: 'blur(2px)',
               pointerEvents: 'none',
-              animation: 'pwGlow 3.6s ease-in-out infinite',
-              opacity: 0.85,
+              animation: 'pwGlow 4s ease-in-out infinite',
+              opacity: 0.9,
             }}
           />
-
-          {/* floating "calendar" card */}
-          <div
-            style={{
-              position: 'relative',
-              animation: 'pwFloat 4.8s ease-in-out infinite',
-            }}
-          >
-            <div style={{ fontWeight: 950, fontSize: '1.05rem', color: 'rgba(2,6,23,0.92)' }}>
+          <div style={{ position: 'relative', animation: 'pwFloat 5s ease-in-out infinite' }}>
+            <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 700, letterSpacing: '0.02em', color: 'var(--ink)' }}>
               How it works
-            </div>
-
-            <div style={{ marginTop: 12, display: 'grid', gap: 10 }}>
+            </h3>
+            <ol style={{ marginTop: 16, marginBottom: 0, paddingLeft: 0, listStyle: 'none', display: 'grid', gap: 12 }}>
               {[
-                { n: '1', t: 'Detect', d: 'Open slot appears.' },
-                { n: '2', t: 'Offer', d: 'Clients get a text.' },
-                { n: '3', t: 'Book', d: 'First yes is booked.' },
-              ].map((x) => (
-                <div
-                  key={x.n}
+                { n: 1, title: 'Confirm or deny', desc: '24–48 hr before each appointment we send reminders (e.g. via Twilio) so clients confirm or cancel.' },
+                { n: 2, title: 'Fill the slot', desc: 'If a client cancels or doesn’t confirm within 24 hours of start, we text your waitlist in priority order (high → medium → low) until someone accepts.' },
+                { n: 3, title: 'Calendar + notify', desc: 'When someone accepts, the event is added to your Google or Outlook calendar and you get a notification.' },
+              ].map((step) => (
+                <li
+                  key={step.n}
                   style={{
                     display: 'grid',
-                    gridTemplateColumns: '36px 1fr',
+                    gridTemplateColumns: '32px 1fr',
                     alignItems: 'start',
-                    gap: 10,
-                    padding: 12,
-                    borderRadius: 16,
-                    background: 'linear-gradient(135deg, rgba(255,255,255,0.90), rgba(255,255,255,0.66))',
-                    border: '1px solid rgba(255,255,255,0.60)',
-                    boxShadow: '0 14px 34px rgba(0,0,0,0.10)',
+                    gap: 12,
+                    padding: 14,
+                    borderRadius: 8,
+                    background: 'var(--bg-card)',
+                    border: '1px solid var(--border)',
                   }}
                 >
-                  <div
+                  <span
                     style={{
-                      width: 36,
-                      height: 36,
-                      borderRadius: 999,
+                      width: 32,
+                      height: 32,
+                      borderRadius: '50%',
                       display: 'grid',
                       placeItems: 'center',
-                      fontWeight: 950,
-                      color: 'rgba(2,6,23,0.86)',
-                      background:
-                        x.n === '1'
-                          ? 'rgba(47,224,166,0.26)'
-                          : x.n === '2'
-                            ? 'rgba(59,130,246,0.20)'
-                            : 'rgba(250,204,21,0.20)',
-                      border: '1px solid rgba(255,255,255,0.65)',
+                      fontWeight: 700,
+                      fontSize: '0.9rem',
+                      color: '#1c1916',
+                      background: 'var(--accent)',
+                      border: '1px solid var(--accent)',
                     }}
                   >
-                    {x.n}
-                  </div>
+                    {step.n}
+                  </span>
                   <div>
-                    <div style={{ fontWeight: 900, color: 'rgba(2,6,23,0.90)' }}>{x.t}</div>
-                    <div style={{ marginTop: 2, color: 'rgba(2,6,23,0.78)', fontWeight: 650 }}>
-                      {x.d}
-                    </div>
+                    <div style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--ink)' }}>{step.title}</div>
+                    <div style={{ marginTop: 2, fontSize: '0.875rem', color: 'var(--ink-muted)' }}>{step.desc}</div>
                   </div>
-                </div>
+                </li>
               ))}
-            </div>
-
-            {/* animated status strip */}
+            </ol>
             <div
               style={{
-                marginTop: 14,
+                marginTop: 16,
                 padding: 12,
-                borderRadius: 16,
-                background:
-                  'linear-gradient(90deg, rgba(47,224,166,0.18), rgba(59,130,246,0.14), rgba(250,204,21,0.14))',
-                border: '1px solid rgba(255,255,255,0.60)',
-                color: 'rgba(2,6,23,0.82)',
-                fontWeight: 700,
+                borderRadius: 8,
+                background: 'rgba(154,123,79,0.12)',
+                border: '1px solid var(--border)',
+                fontSize: '0.9rem',
+                fontWeight: 600,
+                color: 'var(--ink)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                gap: 10,
+                gap: 8,
               }}
             >
-              <span>📅 3:00pm opened</span>
-              <span style={{ fontWeight: 950 }}>Booked ✅</span>
+              <span>Slot opened → waitlist notified</span>
+              <span style={{ fontWeight: 700 }}>Rebooked</span>
             </div>
           </div>
         </aside>
       </section>
 
-      {/* BENEFITS (short, colorful, no dead space) */}
-      <section className="pw-grid3" style={{ marginTop: 18, gap: 14 }}>
-        {[
-          {
-            t: 'Automatic outreach',
-            d: 'No back-and-forth.',
-            bg: 'linear-gradient(135deg, rgba(47,224,166,0.18), rgba(255,255,255,0.82))',
-            edge: 'rgba(47,224,166,0.55)',
-          },
-          {
-            t: 'Therapist control',
-            d: 'Rules + priorities.',
-            bg: 'linear-gradient(135deg, rgba(59,130,246,0.14), rgba(255,255,255,0.82))',
-            edge: 'rgba(59,130,246,0.45)',
-          },
-          {
-            t: 'Fewer gaps',
-            d: 'Steadier weeks.',
-            bg: 'linear-gradient(135deg, rgba(250,204,21,0.14), rgba(255,255,255,0.82))',
-            edge: 'rgba(250,204,21,0.45)',
-          },
-        ].map((x) => (
-          <div
-            key={x.t}
-            className="pw-panel"
-            style={{
-              padding: 16,
-              background: x.bg,
-              borderLeft: `4px solid ${x.edge}`,
-              boxShadow: '0 14px 38px rgba(0,0,0,0.12)',
-            }}
-          >
-            <div style={{ fontWeight: 950, color: 'rgba(2,6,23,0.92)' }}>{x.t}</div>
-            <div style={{ marginTop: 6, color: 'rgba(2,6,23,0.78)', fontWeight: 650 }}>
-              {x.d}
+      {/* Benefits */}
+      <section className="pw-section" style={{ marginTop: 8 }}>
+        <h2 className="pw-sectionTitle" style={{ marginBottom: 16 }}>
+          Why Patchwerx
+        </h2>
+        <div className="pw-grid3" style={{ gap: 16 }}>
+          {[
+            { title: 'Automatic outreach', desc: 'We send confirmations and reach out to your waitlist by SMS. First yes gets the slot—no back-and-forth.' },
+            { title: 'Priority waitlist', desc: 'Your caseload (name, phone, priority: high / medium / low). We contact in order until the slot is claimed.' },
+            { title: 'Calendar sync', desc: 'Rebookings appear on your Google or Outlook calendar; you’re notified when a session is filled.' },
+          ].map((item) => (
+            <div
+              key={item.title}
+              className="pw-panel"
+              style={{
+                padding: 20,
+                borderLeft: '4px solid var(--accent)',
+                background: 'var(--bg-card)',
+              }}
+            >
+              <h3 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 700, color: 'var(--ink)' }}>
+                {item.title}
+              </h3>
+              <p style={{ margin: '8px 0 0', fontSize: '0.95rem', lineHeight: 1.55, color: 'var(--ink-muted)' }}>
+                {item.desc}
+              </p>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </section>
 
-      {/* CTA STRIP (simple + compact) */}
-      <section style={{ marginTop: 18 }}>
+      {/* CTA */}
+      <section style={{ marginTop: 32 }}>
         <div
-          className="pw-panel"
+          className="pw-panel pw-panel-elevated"
           style={{
-            padding: 16,
+            padding: 24,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            gap: 12,
+            gap: 16,
             flexWrap: 'wrap',
-            background: 'linear-gradient(135deg, rgba(255,255,255,0.90), rgba(255,255,255,0.70))',
           }}
         >
-          <div style={{ fontWeight: 900, color: 'rgba(2,6,23,0.90)' }}>
-            Ready to fill cancellations?
+          <div>
+            <div style={{ fontWeight: 700, fontSize: '1.1rem', color: 'var(--ink)' }}>
+              Ready to fill cancellations?
+            </div>
+            <div style={{ marginTop: 4, fontSize: '0.9rem', color: 'var(--ink-muted)' }}>
+              Set up in minutes. Pay only when we rebook a session.
+            </div>
           </div>
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
             <Link className="pw-link pw-linkPrimary" to="/signup/therapist">

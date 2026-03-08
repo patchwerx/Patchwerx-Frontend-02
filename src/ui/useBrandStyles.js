@@ -1,31 +1,21 @@
 import { useMemo } from 'react'
 
 /**
- * Shared "Patchwerx" look & feel (modern glass + calm forest vibe).
- * Uses dark text on light surfaces for contrast.
+ * Shared "Patchwerx" look & feel — dark academia (cozy dark mode).
+ * Uses cream/ivory text on dark surfaces; gold accent for CTAs.
  */
 export function useBrandStyles({ loading = false } = {}) {
   return useMemo(
     () => ({
-      // --- Page / background ---
       page: {
         minHeight: '100vh',
         display: 'grid',
         justifyItems: 'center',
         alignContent: 'start',
         padding: '18px 18px 28px',
-        fontFamily:
-          'ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"',
-        color: '#07121f',
-
-        backgroundImage: [
-          'radial-gradient(1200px 800px at 20% 10%, rgba(16,185,129,0.18), rgba(16,185,129,0.02) 55%, rgba(2,6,23,0.0) 70%)',
-          'linear-gradient(180deg, rgba(2,6,23,0.62) 0%, rgba(2,6,23,0.38) 40%, rgba(2,6,23,0.62) 100%)',
-          'url("https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=2400&q=80")',
-        ].join(', '),
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'fixed',
+        fontFamily: 'var(--font-body), Georgia, serif',
+        color: 'var(--ink)',
+        background: 'var(--bg-page)',
       },
 
       shell: {
@@ -36,7 +26,6 @@ export function useBrandStyles({ loading = false } = {}) {
         gap: '16px',
       },
 
-      // --- Nav (modern glass bar) ---
       appBar: {
         width: '100%',
         maxWidth: '1060px',
@@ -46,18 +35,11 @@ export function useBrandStyles({ loading = false } = {}) {
         padding: '10px 12px',
         borderRadius: '18px',
         marginBottom: '14px',
-
-        // Glass + subtle shine
-        background: [
-          'linear-gradient(180deg, rgba(255,255,255,0.86), rgba(255,255,255,0.62))',
-          'radial-gradient(900px 120px at 20% 0%, rgba(16,185,129,0.16), rgba(16,185,129,0.00) 60%)',
-          'radial-gradient(700px 120px at 80% 0%, rgba(59,130,246,0.14), rgba(59,130,246,0.00) 55%)',
-        ].join(', '),
-        border: '1px solid rgba(255,255,255,0.40)',
-        boxShadow:
-          '0 18px 46px rgba(0,0,0,0.22), 0 1px 0 rgba(255,255,255,0.55) inset',
-        backdropFilter: 'blur(12px) saturate(140%)',
-        WebkitBackdropFilter: 'blur(12px) saturate(140%)',
+        background: 'var(--bg-elevated)',
+        border: '1px solid var(--border)',
+        boxShadow: 'var(--shadow)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
       },
 
       navInner: {
@@ -79,13 +61,10 @@ export function useBrandStyles({ loading = false } = {}) {
         width: '34px',
         height: '34px',
         borderRadius: '12px',
-        background:
-          'linear-gradient(135deg, rgba(16,185,129,0.20), rgba(59,130,246,0.18))',
-        border: '1px solid rgba(2,6,23,0.10)',
+        background: 'var(--accent-soft)',
+        border: '1px solid var(--border)',
         display: 'grid',
         placeItems: 'center',
-        boxShadow:
-          '0 10px 26px rgba(2,6,23,0.10), 0 1px 0 rgba(255,255,255,0.55) inset',
         flex: '0 0 auto',
       },
 
@@ -100,8 +79,8 @@ export function useBrandStyles({ loading = false } = {}) {
         fontSize: '1.1rem',
         lineHeight: 1.05,
         margin: 0,
-        letterSpacing: '-0.02em',
-        color: '#07121f',
+        letterSpacing: '0.02em',
+        color: 'var(--ink)',
         whiteSpace: 'nowrap',
         overflow: 'hidden',
         textOverflow: 'ellipsis',
@@ -111,7 +90,7 @@ export function useBrandStyles({ loading = false } = {}) {
         margin: 0,
         fontSize: '0.82rem',
         lineHeight: 1.2,
-        color: 'rgba(2,6,23,0.68)',
+        color: 'var(--ink-muted)',
         whiteSpace: 'nowrap',
         overflow: 'hidden',
         textOverflow: 'ellipsis',
@@ -125,78 +104,62 @@ export function useBrandStyles({ loading = false } = {}) {
         justifyContent: 'flex-end',
       },
 
-      // Base pill style (use with NavLink; see notes below for active style)
       navLink: {
         textDecoration: 'none',
         fontSize: '0.86rem',
-        fontWeight: 800,
-        letterSpacing: '-0.01em',
-        color: 'rgba(2,6,23,0.78)',
+        fontWeight: 600,
+        letterSpacing: '0.01em',
+        color: 'var(--ink-muted)',
         padding: '8px 10px',
         borderRadius: '999px',
-        border: '1px solid rgba(2,6,23,0.10)',
-        background: 'rgba(255,255,255,0.62)',
-        boxShadow: '0 1px 0 rgba(255,255,255,0.50) inset',
-        transition:
-          'transform 140ms ease, box-shadow 140ms ease, background 140ms ease, border-color 140ms ease',
+        border: '1px solid transparent',
+        background: 'transparent',
+        transition: 'color 140ms ease, background 140ms ease, border-color 140ms ease',
         WebkitTapHighlightColor: 'transparent',
       },
 
       navLinkHover: {
-        transform: 'translateY(-1px)',
-        background: 'rgba(255,255,255,0.78)',
-        border: '1px solid rgba(2,6,23,0.14)',
-        boxShadow:
-          '0 10px 22px rgba(2,6,23,0.10), 0 1px 0 rgba(255,255,255,0.55) inset',
+        color: 'var(--ink)',
+        background: 'var(--accent-soft)',
+        border: '1px solid var(--border)',
       },
 
-      // For the active route (NavLink isActive)
       navLinkActive: {
-        color: '#07121f',
-        border: '1px solid rgba(16,185,129,0.28)',
-        background:
-          'linear-gradient(135deg, rgba(16,185,129,0.18), rgba(59,130,246,0.12))',
-        boxShadow:
-          '0 14px 30px rgba(16,185,129,0.12), 0 1px 0 rgba(255,255,255,0.60) inset',
+        color: 'var(--accent)',
+        border: '1px solid var(--border)',
+        background: 'var(--accent-soft)',
       },
 
       navCta: {
         textDecoration: 'none',
         fontSize: '0.86rem',
-        fontWeight: 900,
-        letterSpacing: '-0.01em',
-        color: '#ffffff',
+        fontWeight: 700,
+        letterSpacing: '0.01em',
+        color: '#1c1916',
         padding: '8px 12px',
         borderRadius: '999px',
-        border: '1px solid rgba(255,255,255,0.28)',
-        background:
-          'linear-gradient(135deg, rgba(16,185,129,0.98), rgba(59,130,246,0.95))',
-        boxShadow: '0 16px 34px rgba(2,6,23,0.18)',
+        border: '1px solid var(--accent)',
+        background: 'var(--accent)',
+        boxShadow: '0 4px 14px rgba(201, 169, 98, 0.25)',
         transition: 'transform 140ms ease, filter 140ms ease',
       },
 
       navCtaHover: {
         transform: 'translateY(-1px)',
-        filter: 'brightness(1.03)',
+        filter: 'brightness(1.1)',
       },
 
-      // --- Content card ---
       card: {
         width: '100%',
         maxWidth: '720px',
         justifySelf: 'center',
-        borderRadius: '22px',
+        borderRadius: '12px',
         padding: '24px',
-        background:
-          'linear-gradient(180deg, rgba(255,255,255,0.92), rgba(255,255,255,0.80))',
-        border: '1px solid rgba(255,255,255,0.38)',
-        boxShadow:
-          '0 22px 60px rgba(0,0,0,0.35), 0 1px 0 rgba(255,255,255,0.40) inset',
-        backdropFilter: 'blur(10px)',
-        WebkitBackdropFilter: 'blur(10px)',
+        background: 'var(--bg-card)',
+        border: '1px solid var(--border)',
+        boxShadow: 'var(--shadow)',
       },
 
-      // --- Form ---
       form: {
         display: 'flex',
         flexDirection: 'column',
@@ -205,21 +168,21 @@ export function useBrandStyles({ loading = false } = {}) {
 
       label: {
         display: 'block',
-        fontSize: '0.85rem',
-        color: 'rgba(2,6,23,0.72)',
+        fontSize: '0.9rem',
+        fontWeight: 600,
+        color: 'var(--ink-muted)',
         marginBottom: '6px',
       },
 
       field: {
-        borderRadius: '14px',
-        border: '1px solid rgba(2,6,23,0.10)',
-        backgroundColor: 'rgba(255,255,255,0.88)',
+        borderRadius: '10px',
+        border: '1px solid var(--border)',
+        backgroundColor: 'rgba(48, 42, 36, 0.95)',
+        color: 'var(--ink)',
         padding: '12px 12px',
         outline: 'none',
         fontSize: '1rem',
         width: '100%',
-        color: '#07121f',
-        boxShadow: '0 1px 0 rgba(255,255,255,0.65) inset',
       },
 
       twoColRow: {
@@ -229,17 +192,15 @@ export function useBrandStyles({ loading = false } = {}) {
       },
 
       button: {
-        borderRadius: '14px',
-        border: '1px solid rgba(255,255,255,0.35)',
+        borderRadius: '10px',
+        border: '1px solid var(--accent)',
         padding: '12px 14px',
         fontSize: '1rem',
-        fontWeight: 800,
+        fontWeight: 700,
         cursor: loading ? 'not-allowed' : 'pointer',
-        color: '#ffffff',
-        background:
-          'linear-gradient(135deg, rgba(37,99,235,0.95), rgba(16,185,129,0.95))',
-        boxShadow:
-          '0 18px 40px rgba(2,6,23,0.18), 0 1px 0 rgba(255,255,255,0.25) inset',
+        color: '#1c1916',
+        background: 'var(--accent)',
+        boxShadow: '0 4px 14px rgba(201, 169, 98, 0.25)',
         transition: 'transform 120ms ease, filter 120ms ease, opacity 120ms ease',
         opacity: loading ? 0.85 : 1,
       },
@@ -247,39 +208,39 @@ export function useBrandStyles({ loading = false } = {}) {
       buttonHint: {
         marginTop: '10px',
         fontSize: '0.85rem',
-        color: 'rgba(2,6,23,0.62)',
+        color: 'var(--ink-faint)',
       },
 
       error: {
         marginTop: '8px',
         padding: '10px 12px',
-        borderRadius: '14px',
-        background: 'rgba(220,38,38,0.08)',
-        border: '1px solid rgba(220,38,38,0.18)',
-        color: 'rgba(153,27,27,0.95)',
+        borderRadius: '10px',
+        background: 'rgba(201, 122, 122, 0.12)',
+        border: '1px solid rgba(201, 122, 122, 0.4)',
+        color: 'var(--error)',
         fontSize: '0.92rem',
       },
 
       footer: {
         justifySelf: 'center',
         textAlign: 'center',
-        color: 'rgba(255,255,255,0.88)',
+        color: 'var(--ink-muted)',
         fontSize: '0.9rem',
         marginTop: '10px',
-        textShadow: '0 2px 18px rgba(0,0,0,0.45)',
       },
 
       subtleText: {
-        color: 'rgba(2,6,23,0.72)',
+        color: 'var(--ink-muted)',
         lineHeight: 1.6,
         margin: 0,
       },
 
       h2: {
         margin: '0 0 10px 0',
-        fontSize: '1.2rem',
-        letterSpacing: '-0.01em',
-        color: '#07121f',
+        fontSize: '1.25rem',
+        fontWeight: 700,
+        letterSpacing: '0.02em',
+        color: 'var(--ink)',
       },
     }),
     [loading]

@@ -45,21 +45,21 @@ export default function TherapistSignup() {
     () => ({
       card: {
         borderRadius: 18,
-        border: '1px solid rgba(16,185,129,0.16)',
-        background:
-          'linear-gradient(180deg, rgba(236,253,245,0.86), rgba(255,255,255,0.86))',
-        boxShadow: '0 18px 54px rgba(2,6,23,0.10)',
+        border: '1px solid var(--border)',
+        background: 'var(--bg-card)',
+        boxShadow: 'var(--shadow)',
         padding: 18,
       },
       title: {
         fontSize: '1.35rem',
-        fontWeight: 900,
-        letterSpacing: '-0.02em',
+        fontWeight: 700,
+        letterSpacing: '0.02em',
         margin: 0,
+        color: 'var(--ink)',
       },
       lead: {
         marginTop: 8,
-        color: 'rgba(2,6,23,0.72)',
+        color: 'var(--ink-muted)',
         lineHeight: 1.55,
         marginBottom: 14,
       },
@@ -71,15 +71,16 @@ export default function TherapistSignup() {
       label: {
         display: 'block',
         fontSize: '0.9rem',
-        fontWeight: 800,
-        color: 'rgba(2,6,23,0.78)',
+        fontWeight: 600,
+        color: 'var(--ink-muted)',
         marginBottom: 6,
       },
       input: {
         width: '100%',
-        borderRadius: 14,
-        border: '1px solid rgba(2,6,23,0.12)',
-        background: 'rgba(255,255,255,0.90)',
+        borderRadius: 10,
+        border: '1px solid var(--border)',
+        background: 'rgba(48, 42, 36, 0.95)',
+        color: 'var(--ink)',
         padding: '11px 12px',
         outline: 'none',
         fontSize: '0.98rem',
@@ -92,54 +93,53 @@ export default function TherapistSignup() {
         alignItems: 'center',
       },
       primaryBtn: {
-        borderRadius: 14,
-        border: '1px solid rgba(16,185,129,0.25)',
+        borderRadius: 10,
+        border: '1px solid var(--accent)',
         padding: '11px 14px',
         fontSize: '0.98rem',
-        fontWeight: 900,
+        fontWeight: 700,
         cursor: 'pointer',
-        background:
-          'linear-gradient(180deg, rgba(34,197,94,0.95), rgba(16,185,129,0.92))',
-        color: 'white',
-        boxShadow: '0 14px 34px rgba(16,185,129,0.22)',
+        background: 'var(--accent)',
+        color: '#1c1916',
+        boxShadow: '0 4px 14px rgba(201, 169, 98, 0.25)',
       },
       secondaryBtn: {
-        borderRadius: 14,
-        border: '1px solid rgba(2,6,23,0.12)',
+        borderRadius: 10,
+        border: '1px solid var(--border)',
         padding: '11px 14px',
         fontSize: '0.98rem',
-        fontWeight: 900,
+        fontWeight: 700,
         cursor: 'pointer',
-        background: 'rgba(255,255,255,0.88)',
-        color: 'rgba(2,6,23,0.82)',
+        background: 'var(--bg-card-alt)',
+        color: 'var(--ink)',
       },
       hint: {
         marginTop: 10,
-        color: 'rgba(2,6,23,0.62)',
+        color: 'var(--ink-faint)',
         fontSize: '0.92rem',
         lineHeight: 1.45,
       },
       error: {
         marginTop: 10,
-        borderRadius: 14,
+        borderRadius: 10,
         padding: '10px 12px',
-        border: '1px solid rgba(239,68,68,0.22)',
-        background: 'rgba(239,68,68,0.08)',
-        color: 'rgba(153,27,27,0.95)',
-        fontWeight: 800,
+        border: '1px solid rgba(201, 122, 122, 0.4)',
+        background: 'rgba(201, 122, 122, 0.12)',
+        color: 'var(--error)',
+        fontWeight: 600,
       },
       success: {
         marginTop: 6,
         padding: '12px 14px',
-        borderRadius: 16,
-        border: '1px solid rgba(47,224,166,0.25)',
-        background: 'rgba(47,224,166,0.10)',
-        color: 'rgba(3,105,64,0.95)',
-        fontWeight: 900,
+        borderRadius: 12,
+        border: '1px solid rgba(201, 169, 98, 0.4)',
+        background: 'var(--accent-soft)',
+        color: 'var(--accent)',
+        fontWeight: 700,
       },
       sub: {
         marginTop: 10,
-        color: 'rgba(2,6,23,0.72)',
+        color: 'var(--ink-muted)',
         lineHeight: 1.6,
       },
       divider: {
@@ -147,8 +147,7 @@ export default function TherapistSignup() {
         marginBottom: 10,
         height: 1,
         width: '100%',
-        background:
-          'linear-gradient(90deg, rgba(2,6,23,0), rgba(2,6,23,0.10), rgba(2,6,23,0))',
+        background: 'linear-gradient(90deg, transparent, var(--border), transparent)',
       },
       stepPillRow: { display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 10 },
       pill: (bg) => ({
@@ -158,22 +157,22 @@ export default function TherapistSignup() {
         padding: '7px 10px',
         borderRadius: 999,
         background: bg,
-        border: '1px solid rgba(255,255,255,0.55)',
-        color: 'rgba(2,6,23,0.78)',
-        fontWeight: 850,
+        border: '1px solid var(--border)',
+        color: 'var(--ink-muted)',
+        fontWeight: 600,
         fontSize: '0.9rem',
       }),
-      tiny: { fontSize: '0.88rem', color: 'rgba(2,6,23,0.62)', marginTop: 6 },
+      tiny: { fontSize: '0.88rem', color: 'var(--ink-faint)', marginTop: 6 },
       okBadge: {
         display: 'inline-flex',
         alignItems: 'center',
         gap: 8,
         padding: '8px 10px',
         borderRadius: 999,
-        border: '1px solid rgba(16,185,129,0.22)',
-        background: 'rgba(16,185,129,0.10)',
-        color: 'rgba(3,105,64,0.95)',
-        fontWeight: 900,
+        border: '1px solid var(--accent)',
+        background: 'var(--accent-soft)',
+        color: 'var(--accent)',
+        fontWeight: 700,
         fontSize: '0.92rem',
       },
     }),
@@ -495,9 +494,9 @@ export default function TherapistSignup() {
           </div>
 
           <div style={styles.stepPillRow}>
-            <span style={styles.pill('rgba(34,197,94,0.16)')}>1) Account</span>
-            <span style={styles.pill('rgba(59,130,246,0.16)')}>2) Calendar</span>
-            <span style={styles.pill('rgba(250,204,21,0.18)')}>3) Rules</span>
+            <span style={styles.pill('var(--accent-soft)')}>1) Account</span>
+            <span style={styles.pill('var(--accent-soft)')}>2) Calendar</span>
+            <span style={styles.pill('var(--accent-soft)')}>3) Rules</span>
           </div>
 
           <div style={styles.divider} />
