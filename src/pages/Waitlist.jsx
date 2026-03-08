@@ -1,8 +1,15 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useTherapistAuth } from '../context/TherapistAuthContext'
+import { toE164 } from '../utils/phone'
 
 const GROUP_ORDER = { A: 0, B: 1, C: 2 }
 const GROUPS = ['A', 'B', 'C']
+
+const GROUP_COLORS = {
+  A: { bg: 'rgba(180, 80, 80, 0.5)', border: 'rgba(200, 100, 100, 0.8)', active: 'rgba(180, 80, 80, 0.85)', text: '#f5e0e0' },
+  B: { bg: 'rgba(180, 160, 60, 0.5)', border: 'rgba(200, 180, 80, 0.8)', active: 'rgba(180, 160, 60, 0.85)', text: '#f5f0d8' },
+  C: { bg: 'rgba(70, 130, 80, 0.5)', border: 'rgba(90, 150, 100, 0.8)', active: 'rgba(70, 130, 80, 0.85)', text: '#d8f0dc' },
+}
 
 function sortByGroup(clients) {
   return [...clients].sort((a, b) => {
@@ -35,6 +42,17 @@ function authHeaders(therapistEmail) {
   return h
 }
 
+/** Normalize a client from API (accept snake_case or camelCase) so we always have first_name, last_name, phone_e164, etc. */
+function normalizeClient(c) {
+  if (!c || typeof c !== 'object') return c
+  return {
+    ...c,
+    first_name: c.first_name ?? c.firstName ?? '',
+    last_name: c.last_name ?? c.lastName ?? '',
+    phone_e164: c.phone_e164 ?? c.phoneE164 ?? c.phone ?? '',
+  }
+}
+
 export default function Waitlist() {
   const { user } = useTherapistAuth()
   const therapistEmail = user?.email ?? null
@@ -45,7 +63,7 @@ export default function Waitlist() {
   const [error, setError] = useState(null)
   const [filterGroup, setFilterGroup] = useState('ALL') // 'ALL' | 'A' | 'B' | 'C'
   const [savingId, setSavingId] = useState(null)
-  const [editRow, setEditRow] = useState(null) // { id, display_name, phone_e164 }
+  const [editRow, setEditRow] = useState(null) // { id, first_name, last_name, phone_e164 }
 
   const fetchClients = async () => {
     if (!apiBase) {
@@ -65,7 +83,8 @@ export default function Waitlist() {
       const res = await fetch(`${apiBase}/clients?email=${encodeURIComponent(therapistEmail)}`)
       if (!res.ok) throw new Error(res.status === 401 ? 'Unauthorized' : `Failed to load clients (${res.status})`)
       const data = await res.json()
-      setClients(Array.isArray(data) ? data : data?.clients ?? [])
+      const raw = Array.isArray(data) ? data : data?.clients ?? []
+      setClients(raw.map(normalizeClient))
     } catch (e) {
       setError(e.message || 'Could not load clients.')
       setClients([])
@@ -117,7 +136,8 @@ export default function Waitlist() {
   const startEdit = (client) => {
     setEditRow({
       id: client.id,
-      display_name: client.display_name ?? '',
+      first_name: client.first_name ?? '',
+      last_name: client.last_name ?? '',
       phone_e164: client.phone_e164 ?? '',
     })
   }
@@ -127,12 +147,21 @@ export default function Waitlist() {
     const client = clients.find((c) => c.id === editRow.id)
     if (!client) return
     const payload = {}
-    if (String(client.display_name ?? '') !== String(editRow.display_name ?? '')) payload.display_name = editRow.display_name || null
-    if (String(client.phone_e164 ?? '') !== String(editRow.phone_e164 ?? '')) payload.phone_e164 = editRow.phone_e164 || null
+    if (String(client.first_name ?? '') !== String(editRow.first_name ?? '')) payload.first_name = editRow.first_name || null
+    if (String(client.last_name ?? '') !== String(editRow.last_name ?? '')) payload.last_name = editRow.last_name || null
+    if (String(client.phone_e164 ?? '') !== String(editRow.phone_e164 ?? '')) {
+      const result = toE164(editRow.phone_e164)
+      if (result.error) {
+        setError(result.error)
+        return
+      }
+      payload.phone_e164 = result.e164
+    }
     if (Object.keys(payload).length === 0) {
       setEditRow(null)
       return
     }
+    setError(null)
     updateClient(editRow.id, payload)
   }
 
@@ -147,18 +176,18 @@ export default function Waitlist() {
 
   if (loading) {
     return (
-      <div style={{ paddingBottom: 28 }}>
-        <h2>Waitlist</h2>
-        <p className="pw-lead">Loading clients…</p>
+      <div style={{ paddingBottom: 40 }}>
+        <h2 style={{ fontSize: '1.6rem' }}>Waitlist</h2>
+        <p className="pw-lead" style={{ fontSize: '1.08rem' }}>Loading clients…</p>
       </div>
     )
   }
 
   if (error && clients.length === 0) {
     return (
-      <div style={{ paddingBottom: 28 }}>
-        <h2>Waitlist</h2>
-        <p className="pw-lead" style={{ color: 'var(--error)' }}>{error}</p>
+      <div style={{ paddingBottom: 40 }}>
+        <h2 style={{ fontSize: '1.6rem' }}>Waitlist</h2>
+        <p className="pw-lead" style={{ color: 'var(--error)', fontSize: '1.08rem' }}>{error}</p>
         {apiBase && therapistEmail && (
           <button type="button" className="pw-btn" onClick={fetchClients}>Try again</button>
         )}
@@ -167,27 +196,90 @@ export default function Waitlist() {
   }
 
   return (
-    <div style={{ paddingBottom: 28 }}>
-      <section style={{ paddingTop: 8, paddingBottom: 16 }}>
-        <h2>Waitlist</h2>
-        <p className="pw-lead" style={{ marginBottom: 16 }}>
+    <div
+      style={{
+        paddingBottom: 40,
+        paddingTop: 12,
+        paddingLeft: 12,
+        paddingRight: 12,
+        borderRadius: 12,
+        background: 'rgba(105, 95, 82, 0.97)',
+      }}
+    >
+      <section style={{ paddingTop: 16, paddingBottom: 24 }}>
+        {/* Dashboard metrics: Revenue saved, Successful rebookings, Clients on waitlist */}
+        {(() => {
+          const successfulRebookingsThisMonth = 3
+          const revenueSaved = 115 * successfulRebookingsThisMonth
+          const formatRevenue = (n) => `$${n.toLocaleString()}`
+          const cardStyle = {
+            padding: '18px 20px',
+            borderRadius: 12,
+            background: 'var(--bg-card)',
+            border: '1px solid var(--border)',
+            boxShadow: 'var(--shadow-soft)',
+          }
+          const valueStyle = { fontSize: '2rem', fontWeight: 700, color: 'var(--ink)', lineHeight: 1.2 }
+          const labelStyle = { marginTop: 6, fontSize: '0.9rem', color: 'var(--ink-muted)', fontWeight: 600 }
+          return (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16, marginBottom: 28 }}>
+              <div style={cardStyle}>
+                <div style={valueStyle}>{formatRevenue(revenueSaved)}</div>
+                <div style={labelStyle}>Revenue saved</div>
+              </div>
+              <div style={cardStyle}>
+                <div style={valueStyle}>{successfulRebookingsThisMonth}</div>
+                <div style={labelStyle}>Successful rebookings this month</div>
+              </div>
+              <div style={cardStyle}>
+                <div style={valueStyle}>{clients.length}</div>
+                <div style={labelStyle}>Clients on waitlist</div>
+              </div>
+            </div>
+          )
+        })()}
+
+        <h2 style={{ fontSize: '1.6rem', marginBottom: 8 }}>Waitlist</h2>
+        <p className="pw-lead" style={{ marginBottom: 20, fontSize: '1.08rem' }}>
           Clients for rebooking offers. Edit name, phone, or group; changes are saved to the server.
         </p>
 
         {/* Group filter */}
-        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 16, alignItems: 'center' }}>
-          <span style={{ fontWeight: 700, color: 'var(--ink-muted)' }}>Show group:</span>
-          {['ALL', ...GROUPS].map((g) => (
-            <button
-              key={g}
-              type="button"
-              className={filterGroup === g ? 'pw-link pw-linkPrimary' : 'pw-link'}
-              onClick={() => setFilterGroup(g)}
-              style={filterGroup !== g ? { border: 'none', cursor: 'pointer', font: 'inherit' } : {}}
-            >
-              {g === 'ALL' ? 'All' : g}
-            </button>
-          ))}
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 20, alignItems: 'center' }}>
+          <span style={{ fontWeight: 600, color: 'var(--ink-faint)', fontSize: '0.95rem' }}>Show group:</span>
+          {['ALL', ...GROUPS].map((g) => {
+            const isSelected = filterGroup === g
+            const colors = g !== 'ALL' ? GROUP_COLORS[g] : null
+            return (
+              <button
+                key={g}
+                type="button"
+                className="pw-link"
+                onClick={() => setFilterGroup(g)}
+                style={{
+                  border: isSelected
+                    ? (g === 'ALL' ? '2px solid var(--accent)' : `2px solid ${colors.border}`)
+                    : (g === 'ALL' ? '2px solid rgba(201, 169, 98, 0.5)' : `2px solid ${colors.border}`),
+                  cursor: 'pointer',
+                  font: 'inherit',
+                  padding: '8px 14px',
+                  fontSize: '0.98rem',
+                  fontWeight: 600,
+                  borderRadius: 8,
+                  boxShadow: 'none',
+                  background: isSelected
+                    ? g === 'ALL'
+                      ? 'var(--accent)'
+                      : colors.active
+                    : 'transparent',
+                  color: isSelected ? (g === 'ALL' ? '#1c1916' : colors.text) : 'var(--ink-muted)',
+                  outline: 'none',
+                }}
+              >
+                {g === 'ALL' ? 'All' : g}
+              </button>
+            )
+          })}
         </div>
 
         {error && (
@@ -203,7 +295,8 @@ export default function Waitlist() {
             <table className="pw-waitlist-table" style={{ width: '100%', borderCollapse: 'collapse', minWidth: 520 }}>
               <thead>
                 <tr>
-                  <th style={thStyle}>Display name</th>
+                  <th style={thStyle}>First</th>
+                  <th style={thStyle}>Last</th>
                   <th style={thStyle}>Phone</th>
                   <th style={thStyle}>Email</th>
                   <th style={thStyle}>Group</th>
@@ -220,13 +313,26 @@ export default function Waitlist() {
                         {isEditing ? (
                           <input
                             className="pw-input"
-                            value={editRow.display_name}
-                            onChange={(e) => setEditRow((p) => ({ ...p, display_name: e.target.value }))}
-                            placeholder="Name"
-                            style={{ maxWidth: 220 }}
+                            value={editRow.first_name}
+                            onChange={(e) => setEditRow((p) => ({ ...p, first_name: e.target.value }))}
+                            placeholder="First"
+                            style={{ maxWidth: 180, fontSize: '1rem', padding: '10px 12px' }}
                           />
                         ) : (
-                          <span>{client.display_name || '—'}</span>
+                          <span>{client.first_name?.trim() || '—'}</span>
+                        )}
+                      </td>
+                      <td style={tdStyle}>
+                        {isEditing ? (
+                          <input
+                            className="pw-input"
+                            value={editRow.last_name}
+                            onChange={(e) => setEditRow((p) => ({ ...p, last_name: e.target.value }))}
+                            placeholder="Last"
+                            style={{ maxWidth: 140 }}
+                          />
+                        ) : (
+                          <span>{client.last_name?.trim() || '—'}</span>
                         )}
                       </td>
                       <td style={tdStyle}>
@@ -235,8 +341,8 @@ export default function Waitlist() {
                             className="pw-input"
                             value={editRow.phone_e164}
                             onChange={(e) => setEditRow((p) => ({ ...p, phone_e164: e.target.value }))}
-                            placeholder="+1234567890"
-                            style={{ maxWidth: 160 }}
+                            placeholder="555-555-5555 or +1 555 555 5555"
+                            style={{ maxWidth: 200, fontSize: '1rem', padding: '10px 12px' }}
                           />
                         ) : (
                           <span>{formatPhoneDisplay(client.phone_e164)}</span>
@@ -246,24 +352,29 @@ export default function Waitlist() {
                         <span>{client.email || '—'}</span>
                       </td>
                       <td style={tdStyle}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
                           {GROUPS.map((g) => {
                             const isCurrent = client.contact_group === g
+                            const colors = GROUP_COLORS[g]
                             return (
                               <button
                                 key={g}
                                 type="button"
-                                className={isCurrent ? 'pw-link pw-linkPrimary' : 'pw-link'}
+                                className="pw-link"
                                 disabled={isSaving}
                                 onClick={() => setGroup(client, g)}
                                 style={{
-                                  padding: '4px 10px',
-                                  fontSize: '0.9rem',
-                                  border: isCurrent ? undefined : 'none',
+                                  padding: '8px 14px',
+                                  fontSize: '1rem',
+                                  fontWeight: 700,
+                                  border: `2px solid ${colors.border}`,
+                                  borderRadius: 8,
                                   cursor: isSaving ? 'wait' : 'pointer',
                                   font: 'inherit',
-                                  fontWeight: isCurrent ? 800 : 600,
-                                  boxShadow: isCurrent ? '0 2px 8px rgba(16,185,129,0.35)' : undefined,
+                                  background: isCurrent ? colors.active : 'transparent',
+                                  color: isCurrent ? colors.text : 'var(--ink-muted)',
+                                  boxShadow: 'none',
+                                  outline: 'none',
                                 }}
                                 title={isCurrent ? 'Current group' : `Set to ${g}`}
                                 aria-pressed={isCurrent}
@@ -273,7 +384,7 @@ export default function Waitlist() {
                             )
                           })}
                           {!client.contact_group || !GROUPS.includes(client.contact_group) ? (
-                            <span style={{ fontSize: '0.8rem', color: 'var(--ink-faint)', marginLeft: 2 }}>
+                            <span style={{ fontSize: '0.95rem', color: 'var(--ink-faint)', marginLeft: 4 }}>
                               No group set
                             </span>
                           ) : null}
@@ -319,15 +430,16 @@ export default function Waitlist() {
 
 const thStyle = {
   textAlign: 'left',
-  padding: '10px 12px',
+  padding: '14px 16px',
   fontWeight: 700,
-  fontSize: '0.85rem',
+  fontSize: '1.05rem',
   color: 'var(--ink)',
   borderBottom: '2px solid var(--border)',
 }
 const tdStyle = {
-  padding: '10px 12px',
-  fontSize: '0.95rem',
+  padding: '14px 16px',
+  fontSize: '1.05rem',
   color: 'var(--ink)',
   verticalAlign: 'middle',
+  lineHeight: 1.4,
 }

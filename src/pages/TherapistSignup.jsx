@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useMsal } from '@azure/msal-react'
 import { loginRequest } from '../auth/msalConfig' // adjust path if needed
+import { toE164 } from '../utils/phone'
 
 /**
  * TherapistSignup.jsx
@@ -198,13 +199,19 @@ export default function TherapistSignup() {
 
     try {
       if (!apiBase) throw new Error('Missing REACT_APP_API_BASE_URL')
+      if (!phone.trim()) throw new Error('Missing phone number')
+
+      const phoneResult = toE164(phone)
+      if (phoneResult.error) throw new Error(phoneResult.error)
+      const phone_e164 = phoneResult.e164
 
       const response = await fetch(`${apiBase.replace(/\/$/, '')}/startInitAuthFlow`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email,
-          phone,
+          phone: phone_e164,
+          phone_e164,
           first_name: firstName.trim() || null,
           last_name: lastName.trim() || null,
           actor_type: 'THERAPIST',
@@ -468,7 +475,7 @@ export default function TherapistSignup() {
               id="phone"
               style={styles.input}
               type="tel"
-              placeholder="(555) 555-5555"
+              placeholder="(555) 555-5555 or 555-555-5555"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               autoComplete="tel"

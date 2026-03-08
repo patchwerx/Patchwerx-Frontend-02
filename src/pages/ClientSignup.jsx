@@ -1,7 +1,10 @@
 import { useState } from 'react'
 import { useBrandStyles } from '../ui/useBrandStyles'
+import { toE164 } from '../utils/phone'
 
 export default function ClientSignup() {
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
   const [therapistPhone, setTherapistPhone] = useState('')
@@ -28,16 +31,28 @@ export default function ClientSignup() {
     try {
       if (!apiBase) throw new Error('Missing REACT_APP_API_BASE_URL')
       if (!email.trim()) throw new Error('Missing email')
-      if (!phone.trim()) throw new Error('Missing phone')
-      if (!therapistPhone.trim()) throw new Error('Missing therapist phone')
+      if (!phone.trim()) throw new Error('Missing your phone number')
+      if (!therapistPhone.trim()) throw new Error('Missing therapist phone number')
+
+      const clientResult = toE164(phone)
+      if (clientResult.error) throw new Error(clientResult.error)
+      const therapistResult = toE164(therapistPhone)
+      if (therapistResult.error) throw new Error(`Therapist phone: ${therapistResult.error}`)
+
+      const phone_e164 = clientResult.e164
+      const therapist_phone_e164 = therapistResult.e164
 
       const response = await fetch(`${apiBase.replace(/\/$/, '')}/clientSignup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          first_name: firstName.trim() || null,
+          last_name: lastName.trim() || null,
           email: email.trim(),
-          phone: phone.trim(),
-          therapist_phone: therapistPhone.trim(),
+          phone_e164,
+          therapist_phone_e164,
+          phone: phone_e164,
+          therapist_phone: therapist_phone_e164,
           actor_type: 'CLIENT',
         }),
       })
@@ -50,6 +65,8 @@ export default function ClientSignup() {
       }
 
       setSubmitted(true)
+      setFirstName('')
+      setLastName('')
       setEmail('')
       setPhone('')
       setTherapistPhone('')
@@ -71,6 +88,37 @@ export default function ClientSignup() {
 
       {!submitted ? (
         <form onSubmit={submit} style={styles.form}>
+          <div style={styles.twoColRow}>
+            <div>
+              <label style={styles.label} htmlFor="firstName">
+                First name
+              </label>
+              <input
+                id="firstName"
+                style={styles.field}
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                type="text"
+                autoComplete="given-name"
+                placeholder="First name"
+              />
+            </div>
+            <div>
+              <label style={styles.label} htmlFor="lastName">
+                Last name
+              </label>
+              <input
+                id="lastName"
+                style={styles.field}
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                type="text"
+                autoComplete="family-name"
+                placeholder="Last name"
+              />
+            </div>
+          </div>
+
           <div>
             <label style={styles.label} htmlFor="email">
               Email
@@ -95,6 +143,7 @@ export default function ClientSignup() {
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               type="tel"
+              placeholder="(555) 555-5555 or 555-555-5555"
               required
             />
           </div>
@@ -109,6 +158,7 @@ export default function ClientSignup() {
               value={therapistPhone}
               onChange={(e) => setTherapistPhone(e.target.value)}
               type="tel"
+              placeholder="(555) 555-5555 or 555-555-5555"
               required
             />
           </div>

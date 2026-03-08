@@ -52,9 +52,9 @@ You need logic that talks to Postgres and returns/updates rows in the `clients` 
 
 - **ListClients**
   - Trigger: `GET /clients` (API Gateway).
-  - Input: query string `therapist_id` (required).
-  - Logic: query Postgres `SELECT * FROM clients WHERE therapist_id = $1 ORDER BY contact_group` (A then B then C).
-  - Response: `200` with JSON array of client objects (or `{ clients: [...] }`). Return `401` if therapist_id is missing or invalid; `500` on DB error.
+  - Input: query string `email` (therapist email; backend resolves to therapist_id).
+  - Logic: resolve therapist_id from email, then `SELECT * FROM clients WHERE therapist_id = $1 ORDER BY contact_group`. Response must include `first_name`, `last_name`, `phone_e164`, etc.
+  - Response: `200` with JSON array of client objects (or `{ clients: [...] }`). Each object must include `first_name`, `last_name`, `phone_e164` (snake_case). Return `401` if therapist unknown; `500` on DB error.
 
 - **UpdateClient**
   - Trigger: `PATCH /clients/{id}` (API Gateway).
