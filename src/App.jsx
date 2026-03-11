@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, NavLink, Link, Navigate, useLocation } from 'react-router-dom'
-import { TherapistAuthProvider, useTherapistAuth } from './context/TherapistAuthContext'
+import { CognitoAuthProvider, useCognitoAuth } from './context/CognitoAuthContext'
 import Home from './pages/Home'
 import About from './pages/About'
 import Pricing from './pages/Pricing'
@@ -7,15 +7,48 @@ import Contact from './pages/Contact'
 import TherapistSignup from './pages/TherapistSignup'
 import ClientSignup from './pages/ClientSignup'
 import TherapistLogin from './pages/TherapistLogin'
+import ClientLogin from './pages/ClientLogin'
 import Dashboard from './pages/Dashboard'
 import Waitlist from './pages/Waitlist'
+import CognitoCallback from './pages/CognitoCallback'
+import Profile from './pages/Profile'
 
-function ProtectedRoute({ children }) {
-  const { isAuthenticated } = useTherapistAuth()
+function RequireTherapist({ children }) {
+  const { isAuthenticated, isTherapist, isLoading } = useCognitoAuth()
   const location = useLocation()
+  if (isLoading) {
+    return (
+      <div className="pw-card pw-route" style={{ padding: 24 }}>
+        <p className="pw-lead">Loading…</p>
+      </div>
+    )
+  }
   if (!isAuthenticated) {
     const redirect = encodeURIComponent(location.pathname)
     return <Navigate to={`/login?redirect=${redirect}`} replace />
+  }
+  if (!isTherapist) {
+    return <Navigate to="/" replace />
+  }
+  return children
+}
+
+function RequireClient({ children }) {
+  const { isAuthenticated, isClient, isLoading } = useCognitoAuth()
+  const location = useLocation()
+  if (isLoading) {
+    return (
+      <div className="pw-card pw-route" style={{ padding: 24 }}>
+        <p className="pw-lead">Loading…</p>
+      </div>
+    )
+  }
+  if (!isAuthenticated) {
+    const redirect = encodeURIComponent(location.pathname)
+    return <Navigate to={`/login/client?redirect=${redirect}`} replace />
+  }
+  if (!isClient) {
+    return <Navigate to="/" replace />
   }
   return children
 }
@@ -23,7 +56,7 @@ function ProtectedRoute({ children }) {
 function Nav() {
   const baseLink = 'pw-link'
   const linkClass = ({ isActive }) => `${baseLink} ${isActive ? 'isActive' : ''}`
-  const { isAuthenticated, logout } = useTherapistAuth()
+  const { isAuthenticated, isTherapist, isClient, logout } = useCognitoAuth()
 
   return (
     <header className="pw-nav" role="banner">
@@ -55,9 +88,16 @@ function Nav() {
 
             {isAuthenticated ? (
               <>
-                <NavLink to="/app/waitlist" className={linkClass}>
-                  Dashboard
-                </NavLink>
+                {isTherapist && (
+                  <NavLink to="/app/waitlist" className={linkClass}>
+                    Dashboard
+                  </NavLink>
+                )}
+                {isClient && (
+                  <NavLink to="/client" className={linkClass}>
+                    My account
+                  </NavLink>
+                )}
                 <button
                   type="button"
                   className="pw-link"
@@ -70,7 +110,10 @@ function Nav() {
             ) : (
               <>
                 <NavLink to="/login" className={linkClass}>
-                  Login
+                  Therapist login
+                </NavLink>
+                <NavLink to="/login/client" className={linkClass}>
+                  Client login
                 </NavLink>
                 <Link to="/signup/therapist" className="pw-link pw-linkPrimary">
                   Start setup
@@ -104,7 +147,7 @@ function Shell({ children }) {
 export default function App() {
   return (
     <BrowserRouter>
-      <TherapistAuthProvider>
+      <CognitoAuthProvider>
         <Routes>
           <Route
             path="/"
@@ -163,25 +206,53 @@ export default function App() {
               </Shell>
             }
           />
+          <Route
+            path="/login/client"
+            element={
+              <Shell>
+                <ClientLogin />
+              </Shell>
+            }
+          />
+
+          <Route
+            path="/auth/callback"
+            element={
+              <Shell>
+                <CognitoCallback />
+              </Shell>
+            }
+          />
 
           <Route
             path="/app"
             element={
-              <ProtectedRoute>
+              <RequireTherapist>
                 <Shell>
                   <Dashboard />
                 </Shell>
-              </ProtectedRoute>
+              </RequireTherapist>
             }
           />
           <Route
             path="/app/waitlist"
             element={
-              <ProtectedRoute>
+              <RequireTherapist>
                 <Shell>
                   <Waitlist />
                 </Shell>
-              </ProtectedRoute>
+              </RequireTherapist>
+            }
+          />
+
+          <Route
+            path="/client"
+            element={
+              <RequireClient>
+                <Shell>
+                  <Profile />
+                </Shell>
+              </RequireClient>
             }
           />
 
@@ -194,7 +265,7 @@ export default function App() {
             }
           />
         </Routes>
-      </TherapistAuthProvider>
+      </CognitoAuthProvider>
     </BrowserRouter>
   )
 }

@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
-import { useTherapistAuth } from '../context/TherapistAuthContext'
+import { useCognitoAuth } from '../context/CognitoAuthContext'
 import { toE164 } from '../utils/phone'
 
 const GROUP_ORDER = { A: 0, B: 1, C: 2 }
@@ -54,8 +54,8 @@ function normalizeClient(c) {
 }
 
 export default function Waitlist() {
-  const { user } = useTherapistAuth()
-  const therapistEmail = user?.email ?? null
+  const { user } = useCognitoAuth()
+  const therapistEmail = user?.profile?.email ?? user?.email ?? null
   const apiBase = process.env.REACT_APP_API_BASE_URL?.replace(/\/$/, '')
 
   const [clients, setClients] = useState([])

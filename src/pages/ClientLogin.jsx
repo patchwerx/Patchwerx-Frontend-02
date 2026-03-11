@@ -1,56 +1,76 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useBrandStyles } from '../../ui/useBrandStyles'
-import { auth } from '../../lib/auth'
+import { useCognitoAuth } from '../context/CognitoAuthContext'
+import { isClientPoolConfigured } from '../config/cognito'
 
 export default function ClientLogin() {
-  const [phone, setPhone] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
-  const styles = useBrandStyles({ loading })
+  const { isAuthenticated, isClient, isLoading, login } = useCognitoAuth()
   const navigate = useNavigate()
+  const [redirectError, setRedirectError] = useState(null)
+  const [redirecting, setRedirecting] = useState(false)
 
-  const submit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-    setError(null)
+  useEffect(() => {
+    if (isLoading) return
+    if (isAuthenticated && isClient) {
+      navigate('/client', { replace: true })
+    }
+  }, [isLoading, isAuthenticated, isClient, navigate])
+
+  const handleSignIn = async () => {
+    setRedirectError(null)
+    setRedirecting(true)
     try {
-      if (!phone.trim()) throw new Error('Missing phone')
-      auth.setClientAuthed(true)
-      navigate('/client')
+      await login('client')
+      setRedirectError('Redirect did not start. Check the browser console.')
     } catch (err) {
-      setError('Login failed.')
+      console.error('Sign-in redirect failed:', err)
+      setRedirectError(err?.message || 'Could not start sign-in. Check the console for details.')
     } finally {
-      setLoading(false)
+      setRedirecting(false)
     }
   }
 
+  if (isLoading) {
+    return (
+      <div>
+        <h2>Client login</h2>
+        <p className="pw-lead">Loading…</p>
+      </div>
+    )
+  }
+
+  if (!isClientPoolConfigured) {
+    return (
+      <div>
+        <h2>Client login</h2>
+        <p className="pw-lead" style={{ color: 'var(--error)' }}>
+          Client sign-in is not configured. Set REACT_APP_COGNITO_CLIENT_HOSTED_UI_DOMAIN and REACT_APP_COGNITO_CLIENT_CLIENT_ID in your environment.
+        </p>
+      </div>
+    )
+  }
+
   return (
-    <div style={{ display: 'grid', gap: 12 }}>
-      <h2 style={styles.h2}>Client login</h2>
+    <div>
+      <h2>Client login</h2>
+      <p className="pw-lead">
+        Sign in to view your account and preferences.
+      </p>
 
-      <form onSubmit={submit} style={styles.form}>
-        <div>
-          <label style={styles.label} htmlFor="phone">
-            Phone
-          </label>
-          <input
-            id="phone"
-            style={styles.field}
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            type="tel"
-            autoComplete="tel"
-            required
-          />
-        </div>
+      {redirectError && (
+        <p className="pw-lead" style={{ marginBottom: 12, color: 'var(--error)', fontSize: '0.9rem' }}>
+          {redirectError}
+        </p>
+      )}
 
-        <button type="submit" style={styles.button} disabled={loading}>
-          {loading ? 'Signing in…' : 'Sign in'}
-        </button>
-
-        {error && <div style={styles.error}>{error}</div>}
-      </form>
+      <button
+        className="pw-btn"
+        type="button"
+        onClick={handleSignIn}
+        disabled={redirecting}
+      >
+        {redirecting ? 'Redirecting…' : 'Sign in with Patchwerx'}
+      </button>
     </div>
   )
 }
