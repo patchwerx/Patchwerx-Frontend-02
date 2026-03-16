@@ -1,28 +1,20 @@
-import { useMemo, useState } from 'react'
-import { useMsal } from '@azure/msal-react'
-import { loginRequest } from '../auth/msalConfig' // adjust path if needed
+import { useMemo, useState, useEffect } from 'react'
+import {
+  buildCalendarConnectAuthorizeUrl,
+  getCalendarConnectRedirectUri,
+  isCalendarConnectAuthConfigured,
+} from '../auth/calendarConnectAuthorize'
 import { toE164 } from '../utils/phone'
 
+const MS_RETURN_KEY = 'pw_ms_reconnect_return'
+const MS_PENDING_KEY = 'pw_ms_connect_pending'
+
 /**
- * TherapistSignup.jsx
- * Maintains prior functionality:
- *  - Create account via POST /startInitAuthFlow
- *  - Then allow Connect Outlook calendar via MSAL loginRedirect
- *
- * Adds:
- *  - Stores therapist_id from signup response (expects backend returns { therapist_id })
- *  - After Outlook connect completes and user returns to the app, can create Graph subscription
- *    by calling backend POST /ms/subscriptions with Authorization: Bearer <graph_access_token>
- *  - Shows clear UI states + errors
- *
- * Notes:
- *  - You must have a route /auth/microsoft/callback that processes MSAL redirect.
- *  - This component triggers subscription creation both:
- *      (a) immediately after redirect when the user returns (silent token + API call)
- *      (b) and via a "Finish calendar connection" button as a fallback
+ * TherapistSignup: create account via POST /startInitAuthFlow, then connect Outlook via Microsoft OAuth.
+ * We use a plain /authorize URL (no MSAL SPA); user lands on /auth/microsoft/callback with a code,
+ * callback POSTs the code to Lambda; backend exchanges it and creates the calendar connection.
  */
 export default function TherapistSignup() {
-  const { instance, accounts } = useMsal()
 
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
@@ -36,20 +28,39 @@ export default function TherapistSignup() {
   const [connectingOutlook, setConnectingOutlook] = useState(false)
   const [outlookError, setOutlookError] = useState(null)
 
-  // NEW: Subscription creation state
-  const [creatingSubscription, setCreatingSubscription] = useState(false)
   const [subscriptionOk, setSubscriptionOk] = useState(false)
   const [subscriptionInfo, setSubscriptionInfo] = useState(null)
   const [subscriptionError, setSubscriptionError] = useState(null)
 
+  // When user returns after calendar connect (confidential flow: backend redirects to return_to or /auth/microsoft/callback)
+  useEffect(() => {
+    if (localStorage.getItem('pw_ms_connected') === 'true') {
+      setSubscriptionOk(true)
+      setSubscriptionInfo({ ok: true })
+    }
+  }, [])
+
+  // Confidential flow: backend may redirect here with ?calendar_connected=1
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search)
+      if (params.get('calendar_connected') === '1') {
+        localStorage.setItem('pw_ms_connected', 'true')
+        setSubscriptionOk(true)
+        setSubscriptionInfo({ ok: true })
+        window.history.replaceState({}, document.title, window.location.pathname)
+      }
+    }
+  }, [])
+
   const styles = useMemo(
     () => ({
       card: {
-        borderRadius: 18,
+        borderRadius: 'var(--radius)',
         border: '1px solid var(--border)',
         background: 'var(--bg-card)',
-        boxShadow: 'var(--shadow)',
-        padding: 18,
+        boxShadow: 'var(--shadow-card)',
+        padding: 32,
       },
       title: {
         fontSize: '1.35rem',
@@ -78,11 +89,11 @@ export default function TherapistSignup() {
       },
       input: {
         width: '100%',
-        borderRadius: 10,
+        borderRadius: 'var(--radiusSm)',
         border: '1px solid var(--border)',
-        background: 'rgba(48, 42, 36, 0.95)',
+        background: 'var(--bg-elevated)',
         color: 'var(--ink)',
-        padding: '11px 12px',
+        padding: '11px 14px',
         outline: 'none',
         fontSize: '0.98rem',
       },
@@ -94,20 +105,20 @@ export default function TherapistSignup() {
         alignItems: 'center',
       },
       primaryBtn: {
-        borderRadius: 10,
+        borderRadius: 'var(--radius-pill)',
         border: '1px solid var(--accent)',
-        padding: '11px 14px',
+        padding: '11px 18px',
         fontSize: '0.98rem',
         fontWeight: 700,
         cursor: 'pointer',
         background: 'var(--accent)',
         color: '#1c1916',
-        boxShadow: '0 4px 14px rgba(201, 169, 98, 0.25)',
+        boxShadow: '0 2px 12px var(--accent-glow), inset 0 1px 0 rgba(255,255,255,0.2)',
       },
       secondaryBtn: {
-        borderRadius: 10,
+        borderRadius: 'var(--radius-pill)',
         border: '1px solid var(--border)',
-        padding: '11px 14px',
+        padding: '11px 18px',
         fontSize: '0.98rem',
         fontWeight: 700,
         cursor: 'pointer',
@@ -182,8 +193,6 @@ export default function TherapistSignup() {
 
   const apiBase = process.env.REACT_APP_API_BASE_URL
 
-  const getActiveAccount = () => instance.getActiveAccount() || accounts?.[0] || null
-
   const parseJsonSafe = async (resp) => {
     try {
       return await resp.json()
@@ -249,151 +258,37 @@ export default function TherapistSignup() {
     }
   }
 
-  const connectOutlook = async () => {
+  const connectOutlook = () => {
     setConnectingOutlook(true)
     setOutlookError(null)
     setSubscriptionError(null)
 
-    try {
-      // Make sure therapist_id exists (user should have signed up)
-      const therapistId = localStorage.getItem('pw_therapist_id')
-      if (!therapistId) {
-        throw new Error('Missing therapist_id. Please create account first.')
-      }
-
-      // Persist a hint for post-redirect flow (optional)
-      localStorage.setItem('pw_ms_connect_pending', 'true')
-
-      await instance.loginRedirect({
-        scopes: loginRequest.scopes,
-        prompt: 'select_account',
-      })
-      // After redirect, the browser navigates away; code below won't run now.
-    } catch (e) {
-      console.error(e)
-      setOutlookError(e?.message || 'Could not start Outlook connect. Please try again.')
+    const therapistId = localStorage.getItem('pw_therapist_id')
+    if (!therapistId) {
+      setOutlookError('Missing therapist_id. Please create account first.')
       setConnectingOutlook(false)
-      localStorage.removeItem('pw_ms_connect_pending')
+      return
     }
-  }
-
-  /**
-   * NEW: Create Graph subscription by calling your backend.
-   * Backend should:
-   *  - read Authorization: Bearer <access_token>
-   *  - create subscription in Graph
-   *  - store subscription_id/clientState/expiration in DB
-   */
-  console.log("FINISH_CLICKED", {
-    apiBase,
-    therapist_id: localStorage.getItem("pw_therapist_id"),
-    activeAccount: instance.getActiveAccount(),
-    accountsLen: accounts?.length,
-  });
-
-  const createGraphSubscription = async () => {
-    
-    console.log("createGraphSubscription clicked", {
-      apiBase,
-      therapist_id: localStorage.getItem("pw_therapist_id"),
-      activeAccount: instance.getActiveAccount(),
-      accountsCount: accounts?.length
-    });
-      
-    setCreatingSubscription(true)
-    setSubscriptionError(null)
-
-    try {
-      if (!apiBase) throw new Error('Missing REACT_APP_API_BASE_URL')
-      const therapist_id = localStorage.getItem('pw_therapist_id')
-      if (!therapist_id) throw new Error('Missing therapist_id. Please create account first.')
-
-      const account = getActiveAccount()
-      if (!account) throw new Error('No Microsoft session found. Please click "Connect Outlook calendar" again.')
-      
-        console.log("ABOUT_TO_ACQUIRE_TOKEN");
-      const tokenResp = await instance.acquireTokenSilent({
-        scopes: loginRequest.scopes,
-        account,
-      })
-
-      console.log("API BASE:", apiBase);
-      console.log("ABOUT_TO_FETCH_SUBSCRIPTIONS", `${apiBase?.replace(/\/$/, '')}/graph/subscriptions`);
-      const resp = await fetch(`${apiBase.replace(/\/$/, '')}/graph/subscriptions`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          therapist_id,
-          access_token: tokenResp.accessToken,
-          // optional:
-          // resource: "/me/events"
-        }),
-      })
-
-      const data = await parseJsonSafe(resp)
-
-      if (!resp.ok) {
-        const msg =
-          data?.error ||
-          data?.message ||
-          `Subscription create failed (${resp.status}). Check backend logs.`
-        throw new Error(msg)
-      }
-
-      setSubscriptionOk(true)
-      setSubscriptionInfo(data || { ok: true })
-      localStorage.setItem('pw_ms_connected', 'true')
-      localStorage.removeItem('pw_ms_connect_pending')
-
-      return data
-    } catch (e) {
-      console.error(e)
-      setSubscriptionOk(false)
-      setSubscriptionInfo(null)
-      setSubscriptionError(e?.message || 'Could not create calendar subscription.')
-      throw e
-    } finally {
-      setCreatingSubscription(false)
+    if (!isCalendarConnectAuthConfigured()) {
+      setOutlookError('Microsoft sign-in is not configured. Check REACT_APP_AAD_CLIENT_ID.')
       setConnectingOutlook(false)
-    }
-  }
-
-  /**
-   * NEW: Post-redirect auto-finish.
-   * When the user returns from Microsoft, if pw_ms_connect_pending is set,
-   * attempt to finalize by creating the subscription.
-   *
-   * This keeps UX smooth without needing a manual "Finish" click.
-   *
-   * NOTE: We purposely don't import useEffect to keep your original imports minimal.
-   * If you prefer, add useEffect and do it properly—below is still safe and idempotent.
-   */
-  const maybeAutoFinish = async () => {
-    // run at most once per mount
-    const alreadyTried = window.__pw_ms_finish_tried
-    if (alreadyTried) return
-    window.__pw_ms_finish_tried = true
-
-    const pending = localStorage.getItem('pw_ms_connect_pending') === 'true'
-    if (!pending) return
-
-    // If already connected, skip
-    const alreadyConnected = localStorage.getItem('pw_ms_connected') === 'true'
-    if (alreadyConnected) {
-      localStorage.removeItem('pw_ms_connect_pending')
       return
     }
 
-    try {
-      await createGraphSubscription()
-    } catch {
-      // keep error state set by createGraphSubscription()
+    sessionStorage.setItem(MS_PENDING_KEY, 'true')
+    sessionStorage.setItem(MS_RETURN_KEY, '/signup/therapist')
+    const redirectUri = getCalendarConnectRedirectUri()
+    if (!redirectUri) {
+      setOutlookError('Missing REACT_APP_API_BASE_URL. Backend callback URL is required for calendar connect.')
+      setConnectingOutlook(false)
+      return
     }
+    const { url } = buildCalendarConnectAuthorizeUrl(redirectUri, {
+      therapistId,
+      returnTo: '/signup/therapist',
+    })
+    window.location.assign(url)
   }
-
-  // Attempt auto-finish on render (safe; will only do once)
-  // If you prefer, move into a useEffect(() => { ... }, []).
-  void maybeAutoFinish()
 
   const resetAll = () => {
     setSubmitted(false)
@@ -403,7 +298,7 @@ export default function TherapistSignup() {
     setSubscriptionOk(false)
     setSubscriptionInfo(null)
     setConnectingOutlook(false)
-    setCreatingSubscription(false)
+    localStorage.removeItem('pw_ms_connected')
 
     localStorage.removeItem('pw_therapist_id')
     localStorage.removeItem('pw_ms_connect_pending')
@@ -513,7 +408,7 @@ export default function TherapistSignup() {
               type="button"
               style={styles.primaryBtn}
               onClick={connectOutlook}
-              disabled={connectingOutlook || creatingSubscription || subscriptionOk}
+              disabled={connectingOutlook || subscriptionOk}
               title="Connect your Microsoft Outlook / Microsoft 365 calendar"
             >
               {subscriptionOk
@@ -521,17 +416,6 @@ export default function TherapistSignup() {
                 : connectingOutlook
                   ? 'Connecting…'
                   : 'Connect Outlook calendar'}
-            </button>
-
-            {/* NEW: Fallback manual finalize */}
-            <button
-              type="button"
-              style={styles.secondaryBtn}
-              onClick={createGraphSubscription}
-              disabled={creatingSubscription || subscriptionOk}
-              title="If you returned from Microsoft and need to finalize setup"
-            >
-              {creatingSubscription ? 'Finishing…' : subscriptionOk ? 'Finished ✅' : 'Finish calendar connection'}
             </button>
 
             <button type="button" style={styles.secondaryBtn} onClick={resetAll}>
@@ -544,21 +428,13 @@ export default function TherapistSignup() {
 
           {subscriptionOk && (
             <div style={{ marginTop: 12 }}>
-              <div style={styles.okBadge}>Webhook subscription active</div>
-              {subscriptionInfo?.subscription_id && (
-                <div style={styles.tiny}>
-                  Subscription ID: <span style={{ fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace' }}>{subscriptionInfo.subscription_id}</span>
-                </div>
-              )}
-              {subscriptionInfo?.expirationDateTime && (
-                <div style={styles.tiny}>Expires: {subscriptionInfo.expirationDateTime}</div>
-              )}
+              <div style={styles.okBadge}>Calendar connection complete</div>
             </div>
           )}
 
           <div style={styles.hint}>
-            You’ll be asked to sign in to Microsoft and approve access to your calendar. When you return, we’ll
-            automatically finalize the connection (and you can also click “Finish calendar connection” if needed).
+            You’ll be asked to sign in to Microsoft and approve access to your calendar. When you return, you’ll be
+            redirected back here and the connection will be saved automatically.
           </div>
         </div>
       )}

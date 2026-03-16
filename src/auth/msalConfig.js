@@ -4,11 +4,10 @@ const clientId = process.env.REACT_APP_AAD_CLIENT_ID;
 const authority =
   process.env.REACT_APP_AAD_AUTHORITY || "https://login.microsoftonline.com/common";
 
-const redirectUri = window.location.origin;
-
-console.log("MSAL clientId:", clientId);
-console.log("MSAL authority:", authority);
-console.log("MSAL redirectUri:", redirectUri);
+// MSAL redirect URI (for any MSAL-based flows only). Not used for Outlook calendar connect.
+// Calendar connect uses calendarConnectAuthorize.js and redirect_uri = origin + "/auth/microsoft/callback".
+const redirectUri =
+  typeof window !== "undefined" ? window.location.origin : "";
 
 if (!clientId) {
   // eslint-disable-next-line no-console
@@ -40,9 +39,16 @@ export const msalConfig = {
   },
 };
 
-// Delegated Graph scopes (calendar automation)
+// Delegated Graph scopes (calendar automation). offline_access required for refresh_token.
 export const loginRequest = {
-  scopes: ["User.Read", "Calendars.ReadWrite", "offline_access"],
+  scopes: [
+    "openid",
+    "profile",
+    "offline_access",
+    "User.Read",
+    "Calendars.Read",
+    "Calendars.ReadWrite",
+  ],
 };
 
 export const graphConfig = {

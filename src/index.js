@@ -12,12 +12,18 @@ import { msalConfig } from "./auth/msalConfig";
 
 const msalInstance = new PublicClientApplication(msalConfig);
 
-createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <AuthProvider {...cognitoOidcConfig}>
-      <MsalProvider instance={msalInstance}>
-        <App />
-      </MsalProvider>
-    </AuthProvider>
-  </React.StrictMode>
-);
+async function bootstrap() {
+  await msalInstance.initialize();
+  const root = createRoot(document.getElementById("root"));
+  root.render(
+    <React.StrictMode>
+      <AuthProvider {...cognitoOidcConfig}>
+        <MsalProvider instance={msalInstance}>
+          <App />
+        </MsalProvider>
+      </AuthProvider>
+    </React.StrictMode>
+  );
+}
+
+bootstrap();

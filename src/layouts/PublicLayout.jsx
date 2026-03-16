@@ -13,7 +13,7 @@ function TopNav() {
           </div>
           <div className="pw-brandText">
             <div className="pw-brandTitle">Patchwerx</div>
-            <div className="pw-brandSub">Calm scheduling, fewer gaps.</div>
+            <div className="pw-brandSub">Fill canceled sessions automatically.</div>
           </div>
         </Link>
 
@@ -51,7 +51,12 @@ export default function PublicLayout() {
         </div>
       </main>
 
-      <footer className="pw-footer">© {new Date().getFullYear()} Patchwerx</footer>
+      <footer className="pw-footer">
+        <div style={{ maxWidth: 560, margin: '0 auto', fontSize: '0.9rem', color: 'var(--ink-muted)', lineHeight: 1.5, marginBottom: 8 }}>
+          Patchwerx helps therapists refill canceled sessions automatically by offering open times to clients who want earlier appointments.
+        </div>
+        © {new Date().getFullYear()} Patchwerx
+      </footer>
     </div>
   )
 }

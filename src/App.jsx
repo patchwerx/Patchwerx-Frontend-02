@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, NavLink, Link, Navigate, useLocation } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import { CognitoAuthProvider, useCognitoAuth } from './context/CognitoAuthContext'
 import Home from './pages/Home'
 import About from './pages/About'
@@ -6,11 +7,11 @@ import Pricing from './pages/Pricing'
 import Contact from './pages/Contact'
 import TherapistSignup from './pages/TherapistSignup'
 import ClientSignup from './pages/ClientSignup'
-import TherapistLogin from './pages/TherapistLogin'
-import ClientLogin from './pages/ClientLogin'
-import Dashboard from './pages/Dashboard'
+import Login from './pages/Login'
 import Waitlist from './pages/Waitlist'
+import Settings from './pages/Settings'
 import CognitoCallback from './pages/CognitoCallback'
+import MicrosoftCallback from './pages/MicrosoftCallback'
 import Profile from './pages/Profile'
 
 function RequireTherapist({ children }) {
@@ -45,7 +46,7 @@ function RequireClient({ children }) {
   }
   if (!isAuthenticated) {
     const redirect = encodeURIComponent(location.pathname)
-    return <Navigate to={`/login/client?redirect=${redirect}`} replace />
+    return <Navigate to={`/login?redirect=${redirect}`} replace />
   }
   if (!isClient) {
     return <Navigate to="/" replace />
@@ -79,9 +80,11 @@ function Nav() {
             <NavLink to="/about" className={linkClass}>
               About
             </NavLink>
-            <NavLink to="/pricing" className={linkClass}>
-              Pricing
-            </NavLink>
+            {!isClient && (
+              <NavLink to="/pricing" className={linkClass}>
+                Pricing
+              </NavLink>
+            )}
             <NavLink to="/contact" className={linkClass}>
               Contact
             </NavLink>
@@ -89,13 +92,18 @@ function Nav() {
             {isAuthenticated ? (
               <>
                 {isTherapist && (
-                  <NavLink to="/app/waitlist" className={linkClass}>
-                    Dashboard
-                  </NavLink>
+                  <>
+                    <NavLink to="/app/waitlist" className={linkClass}>
+                      Dashboard
+                    </NavLink>
+                    <NavLink to="/app/settings" className={linkClass}>
+                      Calendar
+                    </NavLink>
+                  </>
                 )}
                 {isClient && (
                   <NavLink to="/client" className={linkClass}>
-                    My account
+                    Dashboard
                   </NavLink>
                 )}
                 <button
@@ -110,14 +118,8 @@ function Nav() {
             ) : (
               <>
                 <NavLink to="/login" className={linkClass}>
-                  Therapist login
+                  Login
                 </NavLink>
-                <NavLink to="/login/client" className={linkClass}>
-                  Client login
-                </NavLink>
-                <Link to="/signup/therapist" className="pw-link pw-linkPrimary">
-                  Start setup
-                </Link>
               </>
             )}
           </nav>
@@ -135,7 +137,13 @@ function Shell({ children }) {
 
       <main className="pw-main">
         <div className="pw-container">
-          <div className="pw-card pw-route">{children}</div>
+          <motion.div
+            className="pw-card pw-route"
+            whileHover={{ y: -6 }}
+            transition={{ type: 'spring', stiffness: 280, damping: 22 }}
+          >
+            {children}
+          </motion.div>
         </div>
       </main>
 
@@ -144,19 +152,21 @@ function Shell({ children }) {
   )
 }
 
+// Confidential calendar flow: Microsoft redirects to the backend, not here. Home has no code handling.
+function HomeOrMicrosoftRedirect() {
+  return (
+    <Shell>
+      <Home />
+    </Shell>
+  )
+}
+
 export default function App() {
   return (
     <BrowserRouter>
       <CognitoAuthProvider>
         <Routes>
-          <Route
-            path="/"
-            element={
-              <Shell>
-                <Home />
-              </Shell>
-            }
-          />
+          <Route path="/" element={<HomeOrMicrosoftRedirect />} />
           <Route
             path="/about"
             element={
@@ -202,18 +212,12 @@ export default function App() {
             path="/login"
             element={
               <Shell>
-                <TherapistLogin />
+                <Login />
               </Shell>
             }
           />
-          <Route
-            path="/login/client"
-            element={
-              <Shell>
-                <ClientLogin />
-              </Shell>
-            }
-          />
+          <Route path="/login/client" element={<Navigate to="/login" replace />} />
+          <Route path="/login/therapist" element={<Navigate to="/login" replace />} />
 
           <Route
             path="/auth/callback"
@@ -223,14 +227,20 @@ export default function App() {
               </Shell>
             }
           />
+          <Route
+            path="/auth/microsoft/callback"
+            element={
+              <Shell>
+                <MicrosoftCallback />
+              </Shell>
+            }
+          />
 
           <Route
             path="/app"
             element={
               <RequireTherapist>
-                <Shell>
-                  <Dashboard />
-                </Shell>
+                <Navigate to="/app/waitlist" replace />
               </RequireTherapist>
             }
           />
@@ -240,6 +250,16 @@ export default function App() {
               <RequireTherapist>
                 <Shell>
                   <Waitlist />
+                </Shell>
+              </RequireTherapist>
+            }
+          />
+          <Route
+            path="/app/settings"
+            element={
+              <RequireTherapist>
+                <Shell>
+                  <Settings />
                 </Shell>
               </RequireTherapist>
             }

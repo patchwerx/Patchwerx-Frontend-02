@@ -47,7 +47,7 @@ export default function CognitoCallback() {
         .then(({ profile, role }) => {
           saveManualSession(profile, role)
           setManualUser({ profile, role })
-          if (role === 'therapist') navigate('/app', { replace: true })
+          if (role === 'therapist') navigate('/app/waitlist', { replace: true })
           else if (role === 'client') navigate('/client', { replace: true })
           else navigate('/', { replace: true })
         })
@@ -64,7 +64,7 @@ export default function CognitoCallback() {
     }
     if (!auth.isLoading && auth.user) {
       const role = getRoleFromUser(auth.user)
-      if (role === 'therapist') navigate('/app', { replace: true })
+      if (role === 'therapist') navigate('/app/waitlist', { replace: true })
       else if (role === 'client') navigate('/client', { replace: true })
       else navigate('/', { replace: true })
     }
@@ -72,17 +72,19 @@ export default function CognitoCallback() {
 
   if (error) {
     return (
-      <div className="pw-card pw-route" style={{ padding: 24 }}>
+      <div className="pw-card pw-route pw-login-page" style={{ padding: 28 }}>
         <h2>Sign-in error</h2>
-        <p className="pw-lead" style={{ color: 'var(--error)' }}>{error}</p>
+        <p className="pw-lead pw-login-error">{error}</p>
         <a href="/" className="pw-link">Return home</a>
       </div>
     )
   }
 
   return (
-    <div className="pw-card pw-route" style={{ padding: 24 }}>
-      <p className="pw-lead">Completing sign-in…</p>
+    <div className="pw-card pw-route pw-login-page" style={{ padding: 28 }}>
+      <p className="pw-lead pw-login-muted" style={{ marginTop: 0 }}>
+        Completing sign-in…
+      </p>
     </div>
   )
 }

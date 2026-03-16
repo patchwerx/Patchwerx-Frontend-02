@@ -42,13 +42,7 @@ export function buildAuthorizeUrl(pool = 'therapist') {
     redirect_uri: redirectUri,
     state,
   })
-  const url = `${domain}/oauth2/authorize?${params.toString()}`
-
-  if (process.env.NODE_ENV === 'development' && isClientPool) {
-    console.log('[Cognito client login]', { pool: 'client', domain, client_id: cid, redirect_uri: redirectUri, url })
-  }
-
-  return url
+  return `${domain}/oauth2/authorize?${params.toString()}`
 }
 
 export const cognitoConfig = {

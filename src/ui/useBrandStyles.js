@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
 
 /**
- * Shared "Patchwerx" look & feel — dark academia (cozy dark mode).
- * Uses cream/ivory text on dark surfaces; gold accent for CTAs.
+ * Shared "Patchwerx" look & feel — cozy (Paper & Ink + Sunset Softness).
+ * Oatmeal/cream surfaces, espresso text, amber/sage accents, pill buttons, soft shadows.
  */
 export function useBrandStyles({ loading = false } = {}) {
   return useMemo(
@@ -32,12 +32,12 @@ export function useBrandStyles({ loading = false } = {}) {
         position: 'sticky',
         top: 10,
         zIndex: 50,
-        padding: '10px 12px',
-        borderRadius: '18px',
+        padding: '12px 16px',
+        borderRadius: 'var(--radius)',
         marginBottom: '14px',
         background: 'var(--bg-elevated)',
         border: '1px solid var(--border)',
-        boxShadow: 'var(--shadow)',
+        boxShadow: 'var(--shadow-card)',
         backdropFilter: 'blur(12px)',
         WebkitBackdropFilter: 'blur(12px)',
       },
@@ -153,11 +153,11 @@ export function useBrandStyles({ loading = false } = {}) {
         width: '100%',
         maxWidth: '720px',
         justifySelf: 'center',
-        borderRadius: '12px',
-        padding: '24px',
+        borderRadius: 'var(--radius)',
+        padding: '32px',
         background: 'var(--bg-card)',
         border: '1px solid var(--border)',
-        boxShadow: 'var(--shadow)',
+        boxShadow: 'var(--shadow-card)',
       },
 
       form: {
@@ -175,11 +175,11 @@ export function useBrandStyles({ loading = false } = {}) {
       },
 
       field: {
-        borderRadius: '10px',
+        borderRadius: 'var(--radiusSm)',
         border: '1px solid var(--border)',
-        backgroundColor: 'rgba(48, 42, 36, 0.95)',
+        backgroundColor: 'var(--bg-elevated)',
         color: 'var(--ink)',
-        padding: '12px 12px',
+        padding: '12px 14px',
         outline: 'none',
         fontSize: '1rem',
         width: '100%',
@@ -192,15 +192,15 @@ export function useBrandStyles({ loading = false } = {}) {
       },
 
       button: {
-        borderRadius: '10px',
+        borderRadius: 'var(--radius-pill)',
         border: '1px solid var(--accent)',
-        padding: '12px 14px',
+        padding: '12px 18px',
         fontSize: '1rem',
         fontWeight: 700,
         cursor: loading ? 'not-allowed' : 'pointer',
         color: '#1c1916',
         background: 'var(--accent)',
-        boxShadow: '0 4px 14px rgba(201, 169, 98, 0.25)',
+        boxShadow: '0 2px 12px var(--accent-glow), inset 0 1px 0 rgba(255,255,255,0.2)',
         transition: 'transform 120ms ease, filter 120ms ease, opacity 120ms ease',
         opacity: loading ? 0.85 : 1,
       },
@@ -213,10 +213,10 @@ export function useBrandStyles({ loading = false } = {}) {
 
       error: {
         marginTop: '8px',
-        padding: '10px 12px',
-        borderRadius: '10px',
-        background: 'rgba(201, 122, 122, 0.12)',
-        border: '1px solid rgba(201, 122, 122, 0.4)',
+        padding: '12px 14px',
+        borderRadius: 'var(--radiusSm)',
+        background: 'rgba(184, 84, 80, 0.1)',
+        border: '1px solid rgba(184, 84, 80, 0.3)',
         color: 'var(--error)',
         fontSize: '0.92rem',
       },

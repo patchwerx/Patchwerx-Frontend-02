@@ -1,14 +1,23 @@
 import { useState, useEffect, useMemo } from 'react'
+import { motion } from 'framer-motion'
 import { useCognitoAuth } from '../context/CognitoAuthContext'
 import { toE164 } from '../utils/phone'
 
-const GROUP_ORDER = { A: 0, B: 1, C: 2 }
-const GROUPS = ['A', 'B', 'C']
+const cardHover = { y: -6 }
+const cardSpring = { type: 'spring', stiffness: 280, damping: 22 }
+
+const GROUP_ORDER = { A: 0, B: 1, C: 2, BLOCKED: 3 }
+const GROUPS = ['A', 'B', 'C', 'BLOCKED']
 
 const GROUP_COLORS = {
   A: { bg: 'rgba(180, 80, 80, 0.5)', border: 'rgba(200, 100, 100, 0.8)', active: 'rgba(180, 80, 80, 0.85)', text: '#f5e0e0' },
   B: { bg: 'rgba(180, 160, 60, 0.5)', border: 'rgba(200, 180, 80, 0.8)', active: 'rgba(180, 160, 60, 0.85)', text: '#f5f0d8' },
   C: { bg: 'rgba(70, 130, 80, 0.5)', border: 'rgba(90, 150, 100, 0.8)', active: 'rgba(70, 130, 80, 0.85)', text: '#d8f0dc' },
+  BLOCKED: { bg: 'rgba(60, 60, 60, 0.5)', border: 'rgba(80, 80, 80, 0.9)', active: 'rgba(45, 45, 45, 0.95)', text: '#e8e8e8' },
+}
+
+function groupDisplayLabel(g) {
+  return g === 'BLOCKED' ? 'Blocked' : g
 }
 
 function sortByGroup(clients) {
@@ -59,6 +68,7 @@ export default function Waitlist() {
   const apiBase = process.env.REACT_APP_API_BASE_URL?.replace(/\/$/, '')
 
   const [clients, setClients] = useState([])
+  const [summary, setSummary] = useState({ successful_rebookings_this_month: 0 })
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [filterGroup, setFilterGroup] = useState('ALL') // 'ALL' | 'A' | 'B' | 'C'
@@ -85,6 +95,11 @@ export default function Waitlist() {
       const data = await res.json()
       const raw = Array.isArray(data) ? data : data?.clients ?? []
       setClients(raw.map(normalizeClient))
+      if (data && typeof data.summary === 'object' && data.summary !== null) {
+        setSummary({
+          successful_rebookings_this_month: Number(data.summary.successful_rebookings_this_month) || 0,
+        })
+      }
     } catch (e) {
       setError(e.message || 'Could not load clients.')
       setClients([])
@@ -199,23 +214,26 @@ export default function Waitlist() {
     <div
       style={{
         paddingBottom: 40,
-        paddingTop: 12,
+        paddingTop: 2,
         paddingLeft: 12,
         paddingRight: 12,
         borderRadius: 12,
-        background: 'rgba(105, 95, 82, 0.97)',
+        background: 'var(--bg-card)',
       }}
     >
-      <section style={{ paddingTop: 16, paddingBottom: 24 }}>
+      <section style={{ paddingTop: 4, paddingBottom: 24 }}>
+        <h1 className="pw-h1" style={{ margin: '0 0 24px 0' }}>
+          Patchwerx Dashboard
+        </h1>
         {/* Dashboard metrics: Revenue saved, Successful rebookings, Clients on waitlist */}
         {(() => {
-          const successfulRebookingsThisMonth = 3
+          const successfulRebookingsThisMonth = summary.successful_rebookings_this_month
           const revenueSaved = 115 * successfulRebookingsThisMonth
           const formatRevenue = (n) => `$${n.toLocaleString()}`
           const cardStyle = {
             padding: '18px 20px',
             borderRadius: 12,
-            background: 'var(--bg-card)',
+            background: '#f8f4ed',
             border: '1px solid var(--border)',
             boxShadow: 'var(--shadow-soft)',
           }
@@ -223,23 +241,23 @@ export default function Waitlist() {
           const labelStyle = { marginTop: 6, fontSize: '0.9rem', color: 'var(--ink-muted)', fontWeight: 600 }
           return (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16, marginBottom: 28 }}>
-              <div style={cardStyle}>
+              <motion.div style={cardStyle} whileHover={cardHover} transition={cardSpring}>
                 <div style={valueStyle}>{formatRevenue(revenueSaved)}</div>
                 <div style={labelStyle}>Revenue saved</div>
-              </div>
-              <div style={cardStyle}>
+              </motion.div>
+              <motion.div style={cardStyle} whileHover={cardHover} transition={cardSpring}>
                 <div style={valueStyle}>{successfulRebookingsThisMonth}</div>
                 <div style={labelStyle}>Successful rebookings this month</div>
-              </div>
-              <div style={cardStyle}>
+              </motion.div>
+              <motion.div style={cardStyle} whileHover={cardHover} transition={cardSpring}>
                 <div style={valueStyle}>{clients.length}</div>
                 <div style={labelStyle}>Clients on waitlist</div>
-              </div>
+              </motion.div>
             </div>
           )
         })()}
 
-        <h2 style={{ fontSize: '1.6rem', marginBottom: 8 }}>Waitlist</h2>
+        <h1 className="pw-h1" style={{ margin: '0 0 8px 0' }}>Waitlist</h1>
         <p className="pw-lead" style={{ marginBottom: 20, fontSize: '1.08rem' }}>
           Clients for rebooking offers. Edit name, phone, or group; changes are saved to the server.
         </p>
@@ -276,7 +294,7 @@ export default function Waitlist() {
                   outline: 'none',
                 }}
               >
-                {g === 'ALL' ? 'All' : g}
+                {g === 'ALL' ? 'All' : groupDisplayLabel(g)}
               </button>
             )
           })}
@@ -292,15 +310,23 @@ export default function Waitlist() {
           <p className="pw-lead">No clients in this group yet.</p>
         ) : (
           <div className="pw-waitlist-table-wrap" style={{ overflowX: 'auto' }}>
-            <table className="pw-waitlist-table" style={{ width: '100%', borderCollapse: 'collapse', minWidth: 520 }}>
+            <table className="pw-waitlist-table" style={{ width: '100%', borderCollapse: 'collapse', tableLayout: 'fixed' }}>
+              <colgroup>
+                <col style={{ width: '12%' }} />
+                <col style={{ width: '12%' }} />
+                <col style={{ width: '14%' }} />
+                <col style={{ width: '26%' }} />
+                <col style={{ width: '28%' }} />
+                <col style={{ width: '8%' }} />
+              </colgroup>
               <thead>
                 <tr>
                   <th style={thStyle}>First</th>
                   <th style={thStyle}>Last</th>
                   <th style={thStyle}>Phone</th>
                   <th style={thStyle}>Email</th>
-                  <th style={thStyle}>Group</th>
-                  <th style={thStyle}>Actions</th>
+                  <th style={{ ...thStyle, paddingRight: 0 }}>Group</th>
+                  <th style={{ ...thStyle, paddingLeft: 0 }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -316,7 +342,7 @@ export default function Waitlist() {
                             value={editRow.first_name}
                             onChange={(e) => setEditRow((p) => ({ ...p, first_name: e.target.value }))}
                             placeholder="First"
-                            style={{ maxWidth: 180, fontSize: '1rem', padding: '10px 12px' }}
+                            style={{ maxWidth: '100%', width: '100%', fontSize: '1rem', padding: '4px 8px', boxSizing: 'border-box' }}
                           />
                         ) : (
                           <span>{client.first_name?.trim() || '—'}</span>
@@ -329,7 +355,7 @@ export default function Waitlist() {
                             value={editRow.last_name}
                             onChange={(e) => setEditRow((p) => ({ ...p, last_name: e.target.value }))}
                             placeholder="Last"
-                            style={{ maxWidth: 140 }}
+                            style={{ maxWidth: '100%', width: '100%', padding: '4px 8px', boxSizing: 'border-box' }}
                           />
                         ) : (
                           <span>{client.last_name?.trim() || '—'}</span>
@@ -342,7 +368,7 @@ export default function Waitlist() {
                             value={editRow.phone_e164}
                             onChange={(e) => setEditRow((p) => ({ ...p, phone_e164: e.target.value }))}
                             placeholder="555-555-5555 or +1 555 555 5555"
-                            style={{ maxWidth: 200, fontSize: '1rem', padding: '10px 12px' }}
+                            style={{ maxWidth: '100%', width: '100%', fontSize: '1rem', padding: '4px 8px', boxSizing: 'border-box' }}
                           />
                         ) : (
                           <span>{formatPhoneDisplay(client.phone_e164)}</span>
@@ -351,7 +377,7 @@ export default function Waitlist() {
                       <td style={tdStyle}>
                         <span>{client.email || '—'}</span>
                       </td>
-                      <td style={tdStyle}>
+                      <td style={{ ...tdStyle, paddingRight: 0 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
                           {GROUPS.map((g) => {
                             const isCurrent = client.contact_group === g
@@ -376,10 +402,10 @@ export default function Waitlist() {
                                   boxShadow: 'none',
                                   outline: 'none',
                                 }}
-                                title={isCurrent ? 'Current group' : `Set to ${g}`}
+                                title={isCurrent ? 'Current group' : `Set to ${groupDisplayLabel(g)}`}
                                 aria-pressed={isCurrent}
                               >
-                                {g}
+                                {groupDisplayLabel(g)}
                               </button>
                             )
                           })}
@@ -390,21 +416,17 @@ export default function Waitlist() {
                           ) : null}
                         </div>
                       </td>
-                      <td style={tdStyle}>
+                      <td style={{ ...tdStyle, whiteSpace: 'nowrap', paddingLeft: 0 }}>
                         {isEditing ? (
-                          <span style={{ display: 'flex', gap: 6 }}>
-                            <button type="button" className="pw-btn" onClick={saveEdit} disabled={isSaving}>
-                              {isSaving ? 'Saving…' : 'Save'}
-                            </button>
-                            <button
-                              type="button"
-                              className="pw-link"
-                              onClick={cancelEdit}
-                              style={{ border: 'none', cursor: 'pointer', font: 'inherit', padding: '6px 10px' }}
-                            >
-                              Cancel
-                            </button>
-                          </span>
+                          <button
+                            type="button"
+                            className="pw-btn"
+                            onClick={saveEdit}
+                            disabled={isSaving}
+                            style={{ padding: '6px 14px', fontSize: '0.9rem' }}
+                          >
+                            {isSaving ? 'Saving…' : 'Save'}
+                          </button>
                         ) : (
                           <button
                             type="button"
@@ -430,16 +452,18 @@ export default function Waitlist() {
 
 const thStyle = {
   textAlign: 'left',
-  padding: '14px 16px',
+  padding: '10px 8px',
   fontWeight: 700,
   fontSize: '1.05rem',
   color: 'var(--ink)',
   borderBottom: '2px solid var(--border)',
 }
 const tdStyle = {
-  padding: '14px 16px',
+  padding: '10px 8px',
   fontSize: '1.05rem',
   color: 'var(--ink)',
   verticalAlign: 'middle',
   lineHeight: 1.4,
+  overflow: 'hidden',
+  wordBreak: 'break-word',
 }
