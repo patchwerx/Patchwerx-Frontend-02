@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { useCognitoAuth } from '../context/CognitoAuthContext'
 import { toE164 } from '../utils/phone'
+import { buildApiUrl, hasApiBase } from '../utils/apiBase'
 
 const cardHover = { y: -6 }
 const cardSpring = { type: 'spring', stiffness: 280, damping: 22 }
@@ -65,7 +66,7 @@ function normalizeClient(c) {
 export default function Waitlist() {
   const { user } = useCognitoAuth()
   const therapistEmail = user?.profile?.email ?? user?.email ?? null
-  const apiBase = process.env.REACT_APP_API_BASE_URL?.replace(/\/$/, '')
+  const apiBaseConfigured = hasApiBase()
 
   const [clients, setClients] = useState([])
   const [summary, setSummary] = useState({ successful_rebookings_this_month: 0 })
@@ -76,7 +77,7 @@ export default function Waitlist() {
   const [editRow, setEditRow] = useState(null) // { id, first_name, last_name, phone_e164 }
 
   const fetchClients = async () => {
-    if (!apiBase) {
+    if (!apiBaseConfigured) {
       setLoading(false)
       setError('Missing API configuration.')
       return
@@ -90,7 +91,7 @@ export default function Waitlist() {
     setError(null)
     try {
       // Query param only (no custom headers) so GET is a "simple" request and may not trigger CORS preflight
-      const res = await fetch(`${apiBase}/clients?email=${encodeURIComponent(therapistEmail)}`)
+      const res = await fetch(buildApiUrl(`/clients?email=${encodeURIComponent(therapistEmail)}`))
       if (!res.ok) throw new Error(res.status === 401 ? 'Unauthorized' : `Failed to load clients (${res.status})`)
       const data = await res.json()
       const raw = Array.isArray(data) ? data : data?.clients ?? []
@@ -113,10 +114,10 @@ export default function Waitlist() {
   }, [])
 
   const updateClient = async (id, payload) => {
-    if (!apiBase || !therapistEmail) return
+    if (!apiBaseConfigured || !therapistEmail) return
     setSavingId(id)
     try {
-      const res = await fetch(`${apiBase}/clients/${id}`, {
+      const res = await fetch(buildApiUrl(`/clients/${id}`), {
         method: 'PATCH',
         headers: authHeaders(therapistEmail),
         body: JSON.stringify(payload),
@@ -203,7 +204,7 @@ export default function Waitlist() {
       <div style={{ paddingBottom: 40 }}>
         <h2 style={{ fontSize: '1.6rem' }}>Waitlist</h2>
         <p className="pw-lead" style={{ color: 'var(--error)', fontSize: '1.08rem' }}>{error}</p>
-        {apiBase && therapistEmail && (
+        {apiBaseConfigured && therapistEmail && (
           <button type="button" className="pw-btn" onClick={fetchClients}>Try again</button>
         )}
       </div>
@@ -259,7 +260,7 @@ export default function Waitlist() {
 
         <h1 className="pw-h1" style={{ margin: '0 0 8px 0' }}>Waitlist</h1>
         <p className="pw-lead" style={{ marginBottom: 20, fontSize: '1.08rem' }}>
-          Clients for rebooking offers. Edit name, phone, or group; changes are saved to the server.
+          Clients for rebooking offers. Edit name, phone, or group.
         </p>
 
         {/* Group filter */}

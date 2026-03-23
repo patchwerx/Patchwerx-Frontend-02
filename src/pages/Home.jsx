@@ -36,6 +36,13 @@ export default function Home() {
         @media (prefers-reduced-motion: reduce) {
           .pw-motion, .pw-motion * { animation: none !important; transition: none !important; }
         }
+
+        @media (max-width: 900px) {
+          /* Collapse hero into a single column so the right visual doesn't squeeze text */
+          .pw-home-heroGrid {
+            grid-template-columns: 1fr !important;
+          }
+        }
       `}</style>
 
       {/* Hero */}
@@ -54,19 +61,110 @@ export default function Home() {
           boxShadow: 'var(--shadow-card-on-card)',
         }}
       >
-        <div style={{ maxWidth: 720 }}>
-          <h1 className="pw-h1" style={{ margin: 0 }}>
-            Patchwerx: Automatic Rescheduling for Therapists
-          </h1>
-          <p className="pw-lead" style={{ marginTop: 16, marginBottom: 12, fontSize: '1.08rem', lineHeight: 1.7, maxWidth: '36em' }}>
-            Patchwerx fills last-minute cancellations by offering the open time to other clients who want an earlier appointment.
-          </p>
-          <p style={{ margin: 0, fontSize: '0.95rem', lineHeight: 1.6, color: 'var(--ink-muted)' }}>
-            No manual texting. No managing waitlists. Just fewer empty hours in your calendar.
-          </p>
-          <p style={{ marginTop: 16, marginBottom: 0, fontSize: '1rem', fontWeight: 600, color: 'var(--ink)' }}>
-            Most therapists lose $500–$2,000 per month to cancellations. Patchwerx helps you recover that revenue automatically.
-          </p>
+        <div className="pw-home-heroGrid"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '1.15fr 0.85fr',
+            gap: 'clamp(16px, 3vw, 34px)',
+            alignItems: 'start',
+          }}
+        >
+          <div style={{ maxWidth: 720 }}>
+            <h1 className="pw-h1" style={{ margin: 0 }}>
+              Patchwerx helps you fill open spots—without the busywork
+            </h1>
+            <p
+              className="pw-lead"
+              style={{ marginTop: 16, marginBottom: 12, fontSize: '1.08rem', lineHeight: 1.7, maxWidth: '36em' }}
+            >
+              When someone cancels, Patchwerx offers that time to clients who’d love an earlier visit. You stay in control, we help the slot get filled.
+            </p>
+            <p style={{ margin: 0, fontSize: '0.95rem', lineHeight: 1.6, color: 'var(--ink-muted)' }}>
+              No chasing people by text. No juggling a waitlist by hand—just a calmer calendar.
+            </p>
+            <p style={{ marginTop: 16, marginBottom: 0, fontSize: '1rem', fontWeight: 600, color: 'var(--ink)' }}>
+              Cancellations add up fast. Patchwerx is here to help you turn more of those gaps back into real sessions.
+            </p>
+          </div>
+
+          {/* Right visual: quick “before/after” calendar card */}
+          <div
+            aria-hidden="true"
+            style={{
+              width: '100%',
+              maxWidth: 420,
+              borderRadius: 16,
+              border: '1px solid var(--border)',
+              background: 'linear-gradient(180deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0) 45%), var(--bg-card-alt)',
+              boxShadow: 'var(--shadow-soft)',
+              overflow: 'hidden',
+              position: 'relative',
+            }}
+          >
+            <div
+              style={{
+                position: 'absolute',
+                inset: -2,
+                background: 'radial-gradient(380px 160px at 20% 10%, var(--accent-glow), transparent 58%)',
+                filter: 'blur(1px)',
+                pointerEvents: 'none',
+                opacity: 0.95,
+              }}
+            />
+
+            <div style={{ position: 'relative', padding: 18 }}>
+              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 12 }}>
+                <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, color: 'var(--ink)', letterSpacing: '0.02em' }}>
+                  From empty to booked
+                </div>
+                <div style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--sage)', whiteSpace: 'nowrap' }}>Today</div>
+              </div>
+
+              <div style={{ marginTop: 14, display: 'grid', gap: 12 }}>
+                <div
+                  style={{
+                    borderRadius: 14,
+                    background: 'rgba(184, 84, 80, 0.08)',
+                    border: '1px solid rgba(184, 84, 80, 0.22)',
+                    padding: 12,
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+                    <div style={{ fontWeight: 800, color: 'var(--error)' }}>Before</div>
+                    <div style={{ fontWeight: 800, color: 'var(--ink-muted)', fontSize: '0.9rem' }}>Empty hour</div>
+                  </div>
+                  <div style={{ marginTop: 8, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                    <div style={{ height: 10, borderRadius: 999, background: 'rgba(184, 84, 80, 0.22)' }} />
+                    <div style={{ height: 10, borderRadius: 999, background: 'rgba(184, 84, 80, 0.16)' }} />
+                    <div style={{ gridColumn: '1 / -1', height: 10, borderRadius: 999, background: 'rgba(184, 84, 80, 0.12)' }} />
+                  </div>
+                </div>
+
+                <div
+                  style={{
+                    borderRadius: 14,
+                    background: 'rgba(125, 139, 111, 0.12)',
+                    border: '1px solid rgba(125, 139, 111, 0.28)',
+                    padding: 12,
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+                    <div style={{ fontWeight: 800, color: 'var(--sage)' }}>After</div>
+                    <div style={{ fontWeight: 800, color: 'var(--ink)', fontSize: '0.9rem' }}>Rebooked</div>
+                  </div>
+                  <div style={{ marginTop: 8, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                    <div style={{ height: 10, borderRadius: 999, background: 'rgba(125, 139, 111, 0.38)' }} />
+                    <div style={{ height: 10, borderRadius: 999, background: 'rgba(125, 139, 111, 0.22)' }} />
+                    <div style={{ gridColumn: '1 / -1', height: 10, borderRadius: 999, background: 'rgba(125, 139, 111, 0.16)' }} />
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ marginTop: 12, fontSize: '0.9rem', lineHeight: 1.55, color: 'var(--ink-muted)' }}>
+                We reach out to clients for you so you can focus on care, not phone tag.
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -79,7 +177,7 @@ export default function Home() {
           disabled={redirecting}
           style={{ cursor: redirecting ? 'wait' : 'pointer', font: 'inherit' }}
         >
-          {redirecting ? 'Redirecting…' : 'Therapist Sign-Up'}
+          {redirecting ? 'One moment…' : 'Therapist sign up'}
         </button>
         <button
           type="button"
@@ -94,23 +192,13 @@ export default function Home() {
             font: 'inherit',
           }}
         >
-          {redirecting ? 'Redirecting…' : 'Client Sign-Up'}
+          {redirecting ? 'One moment…' : 'Client sign up'}
         </button>
       </div>
 
-      {/* The Problem */}
-      <section className="pw-home-section" style={{ marginBottom: 36 }}>
-        <h2 className="pw-sectionTitle" style={{ marginBottom: 12 }}>Cancellations Cost More Than Just Time</h2>
-        <div className="pw-panel" style={{ padding: 20, maxWidth: 640 }}>
-          <p style={{ margin: '0 0 12px', fontSize: '1rem', lineHeight: 1.65, color: 'var(--ink-muted)' }}>
-            Every therapist deals with cancellations. But refilling those openings usually means texting multiple clients, checking who might want the time, coordinating schedules manually, and hoping someone responds in time. Most of the time, the slot stays empty—that means lost revenue and wasted time.
-          </p>
-        </div>
-      </section>
-
       {/* How it works */}
       <section id="how-it-works" className="pw-home-section" style={{ marginBottom: 36 }}>
-        <h2 className="pw-sectionTitle" style={{ marginBottom: 16 }}>How Patchwerx Works</h2>
+        <h2 className="pw-sectionTitle" style={{ marginBottom: 16 }}>How it works</h2>
         <motion.div
           className="pw-panel pw-panel-elevated pw-motion pw-panel-how"
           style={{ padding: 24, maxWidth: '100%', overflow: 'hidden', position: 'relative', transform: 'translateZ(0)' }}
@@ -128,9 +216,9 @@ export default function Home() {
           <div style={{ position: 'relative' }}>
             <ol className="pw-steps" style={{ margin: 0, paddingLeft: 0, listStyle: 'none' }}>
               {[
-                { n: 1, title: 'A session opens up', desc: 'A client cancels an appointment.' },
-                { n: 2, title: 'Clients are notified', desc: 'Patchwerx offers the time to clients who want earlier appointments.' },
-                { n: 3, title: 'The slot fills', desc: 'A client claims the opening and the session is rebooked.' },
+                { n: 1, title: 'Someone cancels', desc: 'A spot opens on your calendar.' },
+                { n: 2, title: 'We reach out', desc: 'Clients who want an earlier time get a heads-up about the opening.' },
+                { n: 3, title: 'Someone books it', desc: 'The slot gets claimed and you’re back on the books.' },
               ].map((step) => (
                 <li key={step.n} className="pw-step">
                   <span className="pw-stepNum">{step.n}</span>
@@ -141,21 +229,18 @@ export default function Home() {
                 </li>
               ))}
             </ol>
-            <p style={{ marginTop: 16, marginBottom: 0, fontSize: '0.95rem', fontWeight: 600, color: 'var(--ink)' }}>
-              Your calendar stays full without extra work.
-            </p>
           </div>
         </motion.div>
       </section>
 
       {/* Benefits */}
       <section className="pw-home-section" style={{ marginBottom: 36 }}>
-        <h2 className="pw-sectionTitle" style={{ marginBottom: 16 }}>Why Therapists Use Patchwerx</h2>
+        <h2 className="pw-sectionTitle" style={{ marginBottom: 16 }}>Why people like it</h2>
         <div className="pw-grid3">
           {[
-            { title: 'Recover lost revenue', desc: 'Last-minute cancellations don\'t have to mean lost income.' },
-            { title: 'Save hours of admin work', desc: 'No more texting clients or managing waitlists manually.' },
-            { title: 'Runs in the background', desc: 'Once connected, Patchwerx works quietly behind the scenes.' },
+            { title: 'Fill your calendar', desc: 'A filled slot beats an empty one—simple as that.' },
+            { title: 'Less admin', desc: 'Spend less time coordinating and more time helping clients.' },
+            { title: 'Set it and go', desc: 'Quick setup and little maintenance.' },
           ].map((item, i) => (
             <motion.div key={item.title} className={`pw-panel ${i === 0 ? 'pw-panel-accent' : i === 1 ? 'pw-panel-accent-grey' : 'pw-panel-brown'}`} whileHover={cardHover} transition={cardSpring}>
               <h3 className="pw-featureTitle">{item.title}</h3>
@@ -167,24 +252,13 @@ export default function Home() {
 
       {/* Psychological safety */}
       <section className="pw-home-section" style={{ marginBottom: 36 }}>
-        <h2 className="pw-sectionTitle" style={{ marginBottom: 16 }}>Designed to Be Simple and Respectful</h2>
+        <h2 className="pw-sectionTitle" style={{ marginBottom: 16 }}>What therapists love most about Patchwerx</h2>
         <div className="pw-panel" style={{ padding: 20 }}>
           <ul style={{ margin: 0, paddingLeft: 20, fontSize: '1rem', lineHeight: 1.8, color: 'var(--ink-muted)' }}>
-            <li><strong style={{ color: 'var(--ink)' }}>No subscriptions.</strong> You only pay when Patchwerx successfully fills a canceled session.</li>
-            <li><strong style={{ color: 'var(--ink)' }}>Clients opt in.</strong> Only clients who want earlier openings receive notifications.</li>
-            <li><strong style={{ color: 'var(--ink)' }}>Nothing new to manage.</strong> Once connected, Patchwerx runs quietly in the background.</li>
+            <li><strong style={{ color: 'var(--ink)' }}>No monthly fee.</strong> You pay when a canceled slot actually gets rebooked.</li>
+            <li><strong style={{ color: 'var(--ink)' }}>Clients opt in.</strong> Only people who want earlier times hear from us.</li>
+            <li><strong style={{ color: 'var(--ink)' }}>Completely automatic.</strong> After you connect, we stay quietly in the background.</li>
           </ul>
-        </div>
-      </section>
-
-      {/* Pricing */}
-      <section className="pw-home-section" style={{ marginBottom: 36 }}>
-        <h2 className="pw-sectionTitle" style={{ marginBottom: 16 }}>Simple Pricing</h2>
-        <div className="pw-panel pw-panel-elevated" style={{ padding: 24, maxWidth: 480 }}>
-          <div style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--accent)' }}>$5 per rebooked appointment</div>
-          <p style={{ marginTop: 12, marginBottom: 0, fontSize: '0.95rem', lineHeight: 1.6, color: 'var(--ink-muted)' }}>
-            If Patchwerx fills the slot, it costs $5. If it doesn't, you pay nothing. Even filling just 4 sessions per month is often $600–$1,000 in recovered revenue.
-          </p>
         </div>
       </section>
 
@@ -197,8 +271,8 @@ export default function Home() {
           transition={cardSpring}
         >
           <div>
-            <div style={{ fontWeight: 700, fontSize: '1.1rem', color: 'var(--ink)' }}>Stop losing revenue to cancellations</div>
-            <div style={{ marginTop: 4, fontSize: '0.9rem', color: 'var(--ink-muted)' }}>Patchwerx helps therapists refill canceled appointments automatically so you can stay focused on your clients.</div>
+            <div style={{ fontWeight: 700, fontSize: '1.1rem', color: 'var(--ink)' }}>Ready to fill more open spots?</div>
+            <div style={{ marginTop: 4, fontSize: '0.9rem', color: 'var(--ink-muted)' }}>We’d love to help you turn cancellations into real sessions—so you can keep your energy where it matters.</div>
           </div>
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
             <button
@@ -208,7 +282,7 @@ export default function Home() {
               disabled={redirecting}
               style={{ cursor: redirecting ? 'wait' : 'pointer', font: 'inherit' }}
             >
-              {redirecting ? 'Redirecting…' : 'Therapist Sign-Up'}
+              {redirecting ? 'One moment…' : 'Therapist sign up'}
             </button>
             <Link className="pw-link" to="/contact">Contact us</Link>
           </div>

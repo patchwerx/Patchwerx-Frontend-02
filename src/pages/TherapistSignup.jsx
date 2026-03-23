@@ -5,6 +5,7 @@ import {
   isCalendarConnectAuthConfigured,
 } from '../auth/calendarConnectAuthorize'
 import { toE164 } from '../utils/phone'
+import { buildApiUrl, hasApiBase } from '../utils/apiBase'
 
 const MS_RETURN_KEY = 'pw_ms_reconnect_return'
 const MS_PENDING_KEY = 'pw_ms_connect_pending'
@@ -191,7 +192,7 @@ export default function TherapistSignup() {
     []
   )
 
-  const apiBase = process.env.REACT_APP_API_BASE_URL
+  const apiConfigured = hasApiBase()
 
   const parseJsonSafe = async (resp) => {
     try {
@@ -207,14 +208,14 @@ export default function TherapistSignup() {
     setError(null)
 
     try {
-      if (!apiBase) throw new Error('Missing REACT_APP_API_BASE_URL')
+      if (!apiConfigured) throw new Error('Missing REACT_APP_API_BASE_URL')
       if (!phone.trim()) throw new Error('Missing phone number')
 
       const phoneResult = toE164(phone)
       if (phoneResult.error) throw new Error(phoneResult.error)
       const phone_e164 = phoneResult.e164
 
-      const response = await fetch(`${apiBase.replace(/\/$/, '')}/startInitAuthFlow`, {
+      const response = await fetch(buildApiUrl('/startInitAuthFlow'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

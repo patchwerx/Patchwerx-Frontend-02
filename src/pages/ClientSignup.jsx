@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useBrandStyles } from '../ui/useBrandStyles'
 import { toE164 } from '../utils/phone'
+import { buildApiUrl, hasApiBase } from '../utils/apiBase'
 
 export default function ClientSignup() {
   const [firstName, setFirstName] = useState('')
@@ -13,7 +14,7 @@ export default function ClientSignup() {
   const [submitted, setSubmitted] = useState(false)
 
   const styles = useBrandStyles({ loading })
-  const apiBase = process.env.REACT_APP_API_BASE_URL
+  const apiConfigured = hasApiBase()
 
   const parseJsonSafe = async (resp) => {
     try {
@@ -29,7 +30,7 @@ export default function ClientSignup() {
     setError(null)
 
     try {
-      if (!apiBase) throw new Error('Missing REACT_APP_API_BASE_URL')
+      if (!apiConfigured) throw new Error('Missing REACT_APP_API_BASE_URL')
       if (!email.trim()) throw new Error('Missing email')
       if (!phone.trim()) throw new Error('Missing your phone number')
       if (!therapistPhone.trim()) throw new Error('Missing therapist phone number')
@@ -42,7 +43,7 @@ export default function ClientSignup() {
       const phone_e164 = clientResult.e164
       const therapist_phone_e164 = therapistResult.e164
 
-      const response = await fetch(`${apiBase.replace(/\/$/, '')}/clientSignup`, {
+      const response = await fetch(buildApiUrl('/clientSignup'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

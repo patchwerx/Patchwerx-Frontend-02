@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from 'react'
+import { buildApiUrl, hasApiBase } from '../utils/apiBase'
 
 /**
  * Calendar connection API.
@@ -8,14 +9,12 @@ import { useState, useCallback, useEffect } from 'react'
  */
 
 /**
- * @param {string} apiBase - REACT_APP_API_BASE_URL (no trailing slash)
  * @param {string|null} therapistEmail - Therapist email (Cognito) for auth
  * @returns {Promise<{ connection_status: string, webhook_expires_at?: string|null, last_synced_at?: string|null, reauth_required_at?: string|null, last_error?: string|null, last_error_at?: string|null, provider?: string } | null>}
  */
-export async function getCalendarConnection(apiBase, therapistEmail) {
-  if (!apiBase || !therapistEmail) return null
-  const base = apiBase.replace(/\/$/, '')
-  const url = `${base}/calendar-connection?email=${encodeURIComponent(therapistEmail)}`
+export async function getCalendarConnection(therapistEmail) {
+  if (!hasApiBase() || !therapistEmail) return null
+  const url = buildApiUrl(`/calendar-connection?email=${encodeURIComponent(therapistEmail)}`)
   const res = await fetch(url)
   if (res.status === 404) return null
   if (!res.ok) throw new Error(res.status === 401 ? 'Unauthorized' : `Failed to load calendar connection (${res.status})`)
@@ -54,10 +53,10 @@ export function useCalendarConnection(therapistEmail) {
   const [connection, setConnection] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(/** @type {string | null} */ (null))
-  const apiBase = process.env.REACT_APP_API_BASE_URL?.replace(/\/$/, '') ?? ''
+  const apiConfigured = hasApiBase()
 
   const fetchConnection = useCallback(async () => {
-    if (!apiBase || !therapistEmail) {
+    if (!apiConfigured || !therapistEmail) {
       setConnection(null)
       setLoading(false)
       setError(therapistEmail ? 'Missing API configuration.' : null)
@@ -66,7 +65,7 @@ export function useCalendarConnection(therapistEmail) {
     setLoading(true)
     setError(null)
     try {
-      const data = await getCalendarConnection(apiBase, therapistEmail)
+      const data = await getCalendarConnection(therapistEmail)
       setConnection(data)
       if (data?.therapist_id) {
         localStorage.setItem('pw_therapist_id', data.therapist_id)
@@ -76,12 +75,12 @@ export function useCalendarConnection(therapistEmail) {
       const msg = e?.message ?? 'Could not load calendar connection.'
       const isCorsOrNetwork = msg === 'Failed to fetch' || (typeof msg === 'string' && msg.toLowerCase().includes('cors'))
       setError(isCorsOrNetwork
-        ? 'Calendar connection request was blocked (CORS or network). Ensure your API allows origin http://localhost:3000 and responds to OPTIONS for /calendar-connection.'
+        ? 'Calendar connection request failed (CORS or network). For local dev, set REACT_APP_DEV_PROXY=1 in .env.local, or configure API Gateway CORS for http://localhost:3000.'
         : msg)
     } finally {
       setLoading(false)
     }
-  }, [apiBase, therapistEmail])
+  }, [apiConfigured, therapistEmail])
 
   useEffect(() => {
     fetchConnection()
