@@ -40,6 +40,17 @@ export const msalConfig = {
 };
 
 // Delegated Graph scopes (calendar automation). offline_access required for refresh_token.
+// export const loginRequest = {
+//   scopes: [
+//     "openid",
+//     "profile",
+//     "offline_access",
+//     "User.Read",
+//     "Calendars.Read",
+//     "Calendars.ReadWrite",
+//   ],
+// };
+
 export const loginRequest = {
   scopes: [
     "openid",
@@ -47,7 +58,6 @@ export const loginRequest = {
     "offline_access",
     "User.Read",
     "Calendars.Read",
-    "Calendars.ReadWrite",
   ],
 };
 
