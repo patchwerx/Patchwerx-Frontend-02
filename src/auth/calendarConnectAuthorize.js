@@ -24,13 +24,21 @@ const tenant = (() => {
   return match ? match[1] : 'common'
 })()
 
+// const SCOPES = [
+//   'openid',
+//   'profile',
+//   'offline_access',
+//   'User.Read',
+//   'Calendars.Read',
+//   'Calendars.ReadWrite',
+// ].join(' ')
+
 const SCOPES = [
   'openid',
   'profile',
   'offline_access',
   'User.Read',
   'Calendars.Read',
-  'Calendars.ReadWrite',
 ].join(' ')
 
 /**
