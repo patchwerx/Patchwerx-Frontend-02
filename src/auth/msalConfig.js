@@ -54,6 +54,10 @@ export const msalConfig = {
 export const loginRequest = {
   scopes: [
     "openid",
+    "profile",
+    "offline_access",
+    "User.Read",
+    "Calendars.Read",
   ],
 };
 

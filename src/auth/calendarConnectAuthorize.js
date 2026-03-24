@@ -35,6 +35,10 @@ const tenant = (() => {
 
 const SCOPES = [
   'openid',
+  'profile',
+  'offline_access',
+  'User.Read',
+  'Calendars.Read',
 ].join(' ')
 
 /**
