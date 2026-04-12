@@ -12,6 +12,9 @@ import {
 const MS_RETURN_KEY = 'pw_ms_reconnect_return'
 const MS_PENDING_KEY = 'pw_ms_connect_pending'
 
+/** Temporary: public calendar page uses this email when not signed in. Remove when auth is required again. */
+const TEMP_PUBLIC_CALENDAR_DEFAULT_EMAIL = 'sherrardbra@gmail.com'
+
 /** Format ISO date for display (local time, short). */
 function formatDateTime(iso) {
   if (!iso) return '—'
@@ -39,7 +42,9 @@ function getSubscriptionStatusLabel(connection) {
 export default function Settings() {
   const styles = useBrandStyles()
   const { user } = useCognitoAuth()
-  const therapistEmail = user?.profile?.email ?? user?.email ?? null
+  const authEmail = user?.profile?.email ?? user?.email ?? null
+  const therapistEmail = authEmail ?? TEMP_PUBLIC_CALENDAR_DEFAULT_EMAIL
+  const usingPublicDefaultEmail = !authEmail
   const { connection, loading, error, refetch } = useCalendarConnection(therapistEmail)
   const [searchParams, setSearchParams] = useSearchParams()
   const [refreshingOutlook, setRefreshingOutlook] = useState(false)
@@ -106,6 +111,23 @@ export default function Settings() {
   return (
     <div className="pw-settings" style={{ display: 'grid', gap: 24 }}>
       <h1 className="pw-h1" style={{ margin: '0 0 24px 0' }}>Calendar</h1>
+      {usingPublicDefaultEmail && (
+        <div
+          role="status"
+          style={{
+            padding: '12px 14px',
+            borderRadius: 10,
+            fontSize: '0.92rem',
+            lineHeight: 1.5,
+            color: 'var(--ink-muted)',
+            background: 'rgba(125, 139, 111, 0.12)',
+            border: '1px solid rgba(125, 139, 111, 0.35)',
+          }}
+        >
+          Preview mode: calendar data is loaded for <strong style={{ color: 'var(--ink)' }}>{TEMP_PUBLIC_CALENDAR_DEFAULT_EMAIL}</strong>{' '}
+          (not signed in). This is temporary.
+        </div>
+      )}
       <p style={styles.subtleText}>
         Patchwerx reads your Microsoft Outlook calendar here—refresh the connection anytime you change accounts or permissions.
       </p>

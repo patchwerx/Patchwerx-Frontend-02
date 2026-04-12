@@ -94,14 +94,14 @@ function Nav() {
             {isAuthenticated ? (
               <>
                 {isTherapist && (
-                  <>
-                    <NavLink to="/app/waitlist" className={linkClass}>
-                      Dashboard
-                    </NavLink>
-                    <NavLink to="/app/settings" className={linkClass}>
-                      Calendar
-                    </NavLink>
-                  </>
+                  <NavLink to="/app/waitlist" className={linkClass}>
+                    Dashboard
+                  </NavLink>
+                )}
+                {!isClient && (
+                  <NavLink to="/app/settings" className={linkClass}>
+                    Calendar
+                  </NavLink>
                 )}
                 {isClient && (
                   <NavLink to="/client" className={linkClass}>
@@ -119,6 +119,9 @@ function Nav() {
               </>
             ) : (
               <>
+                <NavLink to="/app/settings" className={linkClass}>
+                  Calendar
+                </NavLink>
                 <NavLink to="/login" className={linkClass}>
                   Login
                 </NavLink>
@@ -298,11 +301,9 @@ export default function App() {
           <Route
             path="/app/settings"
             element={
-              <RequireTherapist>
-                <Shell>
-                  <Settings />
-                </Shell>
-              </RequireTherapist>
+              <Shell>
+                <Settings />
+              </Shell>
             }
           />
 
