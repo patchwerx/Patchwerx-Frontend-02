@@ -71,19 +71,19 @@ export default function Home() {
         >
           <div style={{ maxWidth: 720 }}>
             <h1 className="pw-h1" style={{ margin: 0 }}>
-              Patchwerx helps you fill open spots—without the busywork
+              Patchwerx fills open spots—without the busywork
             </h1>
             <p
               className="pw-lead"
               style={{ marginTop: 16, marginBottom: 12, fontSize: '1.08rem', lineHeight: 1.7, maxWidth: '36em' }}
             >
-              When someone cancels, Patchwerx offers that time to clients who’d love an earlier visit. You stay in control, we help the slot get filled.
+              You offer time slots and use Outlook—great. When a spot opens up, Patchwerx pings people by SMS so they can confirm. If they don’t, our rebooking flow helps match that time with someone else who’s ready to take it.
             </p>
             <p style={{ margin: 0, fontSize: '0.95rem', lineHeight: 1.6, color: 'var(--ink-muted)' }}>
-              No chasing people by text. No juggling a waitlist by hand—just a calmer calendar.
+              Less phone tag, fewer empty blocks on the calendar—just a lighter way to keep things full.
             </p>
             <p style={{ marginTop: 16, marginBottom: 0, fontSize: '1rem', fontWeight: 600, color: 'var(--ink)' }}>
-              Cancellations add up fast. Patchwerx is here to help you turn more of those gaps back into real sessions.
+              Last-minute openings happen to everyone. Patchwerx helps you turn more of them into real bookings.
             </p>
           </div>
 
@@ -161,7 +161,7 @@ export default function Home() {
               </div>
 
               <div style={{ marginTop: 12, fontSize: '0.9rem', lineHeight: 1.55, color: 'var(--ink-muted)' }}>
-                We reach out to clients for you so you can focus on care, not phone tag.
+                We handle the reminders and handoffs so you can focus on the work—not the inbox.
               </div>
             </div>
           </div>
@@ -172,16 +172,16 @@ export default function Home() {
       <div className="pw-ctaRow" style={{ marginBottom: 32 }}>
         <button
           type="button"
-          className="pw-link pw-linkPrimary"
+          className="pw-link pw-linkPrimary pw-home-signup-btn"
           onClick={handleTherapistSignUp}
           disabled={redirecting}
           style={{ cursor: redirecting ? 'wait' : 'pointer', font: 'inherit' }}
         >
-          {redirecting ? 'One moment…' : 'Therapist sign up'}
+          {redirecting ? 'One moment…' : 'Provider Sign Up'}
         </button>
         <button
           type="button"
-          className="pw-link"
+          className="pw-link pw-home-signup-btn"
           onClick={handleClientSignUp}
           disabled={redirecting}
           style={{
@@ -192,7 +192,7 @@ export default function Home() {
             font: 'inherit',
           }}
         >
-          {redirecting ? 'One moment…' : 'Client sign up'}
+          {redirecting ? 'One moment…' : 'Guest Sign Up'}
         </button>
       </div>
 
@@ -216,9 +216,9 @@ export default function Home() {
           <div style={{ position: 'relative' }}>
             <ol className="pw-steps" style={{ margin: 0, paddingLeft: 0, listStyle: 'none' }}>
               {[
-                { n: 1, title: 'Someone cancels', desc: 'A spot opens on your calendar.' },
-                { n: 2, title: 'We reach out', desc: 'Clients who want an earlier time get a heads-up about the opening.' },
-                { n: 3, title: 'Someone books it', desc: 'The slot gets claimed and you’re back on the books.' },
+                { n: 1, title: 'A slot opens', desc: 'Outlook shows a cancellation or an unconfirmed time—Patchwerx notices.' },
+                { n: 2, title: 'SMS reminders', desc: 'We text the right people so they can confirm or pass.' },
+                { n: 3, title: 'Rebooking kicks in', desc: 'If needed, we help line up someone else so the time doesn’t go to waste.' },
               ].map((step) => (
                 <li key={step.n} className="pw-step">
                   <span className="pw-stepNum">{step.n}</span>
@@ -238,9 +238,9 @@ export default function Home() {
         <h2 className="pw-sectionTitle" style={{ marginBottom: 16 }}>Why people like it</h2>
         <div className="pw-grid3">
           {[
-            { title: 'Fill your calendar', desc: 'A filled slot beats an empty one—simple as that.' },
-            { title: 'Less admin', desc: 'Spend less time coordinating and more time helping clients.' },
-            { title: 'Set it and go', desc: 'Quick setup and little maintenance.' },
+            { title: 'Fill your calendar', desc: 'A booked block beats a hole in the day—simple as that.' },
+            { title: 'Less admin', desc: 'Spend less time coordinating and more time doing what you actually offer.' },
+            { title: 'Set it and go', desc: 'Hook up Outlook, set your rules, and let the reminders run.' },
           ].map((item, i) => (
             <motion.div key={item.title} className={`pw-panel ${i === 0 ? 'pw-panel-accent' : i === 1 ? 'pw-panel-accent-grey' : 'pw-panel-brown'}`} whileHover={cardHover} transition={cardSpring}>
               <h3 className="pw-featureTitle">{item.title}</h3>
@@ -252,12 +252,12 @@ export default function Home() {
 
       {/* Psychological safety */}
       <section className="pw-home-section" style={{ marginBottom: 36 }}>
-        <h2 className="pw-sectionTitle" style={{ marginBottom: 16 }}>What therapists love most about Patchwerx</h2>
+        <h2 className="pw-sectionTitle" style={{ marginBottom: 16 }}>Why providers like Patchwerx</h2>
         <div className="pw-panel" style={{ padding: 20 }}>
           <ul style={{ margin: 0, paddingLeft: 20, fontSize: '1rem', lineHeight: 1.8, color: 'var(--ink-muted)' }}>
             <li><strong style={{ color: 'var(--ink)' }}>No monthly fee.</strong> You pay when a canceled slot actually gets rebooked.</li>
-            <li><strong style={{ color: 'var(--ink)' }}>Clients opt in.</strong> Only people who want earlier times hear from us.</li>
-            <li><strong style={{ color: 'var(--ink)' }}>Completely automatic.</strong> After you connect, we stay quietly in the background.</li>
+            <li><strong style={{ color: 'var(--ink)' }}>People opt in.</strong> Only folks who want first dibs on openings hear from us.</li>
+            <li><strong style={{ color: 'var(--ink)' }}>Mostly hands-off.</strong> After you connect Outlook, we hum along in the background.</li>
           </ul>
         </div>
       </section>
@@ -272,17 +272,17 @@ export default function Home() {
         >
           <div>
             <div style={{ fontWeight: 700, fontSize: '1.1rem', color: 'var(--ink)' }}>Ready to fill more open spots?</div>
-            <div style={{ marginTop: 4, fontSize: '0.9rem', color: 'var(--ink-muted)' }}>We’d love to help you turn cancellations into real sessions—so you can keep your energy where it matters.</div>
+            <div style={{ marginTop: 4, fontSize: '0.9rem', color: 'var(--ink-muted)' }}>We’d love to help you turn cancellations into real bookings—so your energy stays on the work, not the schedule.</div>
           </div>
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
             <button
               type="button"
-              className="pw-link pw-linkPrimary"
+              className="pw-link pw-linkPrimary pw-home-signup-btn"
               onClick={handleTherapistSignUp}
               disabled={redirecting}
               style={{ cursor: redirecting ? 'wait' : 'pointer', font: 'inherit' }}
             >
-              {redirecting ? 'One moment…' : 'Therapist sign up'}
+              {redirecting ? 'One moment…' : 'Provider Sign Up'}
             </button>
             <Link className="pw-link" to="/contact">Contact us</Link>
           </div>

@@ -13,6 +13,8 @@ import Settings from './pages/Settings'
 import CognitoCallback from './pages/CognitoCallback'
 import MicrosoftCallback from './pages/MicrosoftCallback'
 import Profile from './pages/Profile'
+import TermsOfService from './pages/TermsOfService'
+import PrivacyPolicy from './pages/PrivacyPolicy'
 
 function RequireTherapist({ children }) {
   const { isAuthenticated, isTherapist, isLoading } = useCognitoAuth()
@@ -69,7 +71,7 @@ function Nav() {
             </div>
             <div className="pw-brandText">
               <div className="pw-brandTitle">Patchwerx</div>
-              <div className="pw-brandSub">Calm scheduling, fewer gaps.</div>
+              <div className="pw-brandSub">Outlook in sync, SMS nudges, slots refilled.</div>
             </div>
           </Link>
 
@@ -147,7 +149,30 @@ function Shell({ children }) {
         </div>
       </main>
 
-      <footer className="pw-footer">© {new Date().getFullYear()} Patchwerx</footer>
+      <footer className="pw-footer">
+        <div
+          className="pw-footer-legal"
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '6px 14px',
+            marginBottom: 10,
+          }}
+        >
+          <Link to="/terms" className="pw-link">
+            Terms of Service
+          </Link>
+          <span aria-hidden="true" style={{ color: 'var(--ink-faint)', userSelect: 'none' }}>
+            ·
+          </span>
+          <Link to="/privacy" className="pw-link">
+            Privacy Policy
+          </Link>
+        </div>
+        <div>© {new Date().getFullYear()} Patchwerx Technologies LLC</div>
+      </footer>
     </div>
   )
 }
@@ -188,6 +213,22 @@ export default function App() {
             element={
               <Shell>
                 <Contact />
+              </Shell>
+            }
+          />
+          <Route
+            path="/terms"
+            element={
+              <Shell>
+                <TermsOfService />
+              </Shell>
+            }
+          />
+          <Route
+            path="/privacy"
+            element={
+              <Shell>
+                <PrivacyPolicy />
               </Shell>
             }
           />

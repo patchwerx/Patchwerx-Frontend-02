@@ -45,7 +45,7 @@ export default function TherapistLogin() {
     return (
       <div className="pw-login-page">
         <p className="pw-login-welcome">Welcome to Patchwerx!</p>
-        <h2>Therapist sign-in</h2>
+        <h2>Provider sign-in</h2>
         <p className="pw-lead pw-login-muted">Loading…</p>
       </div>
     )
@@ -55,7 +55,7 @@ export default function TherapistLogin() {
     return (
       <div className="pw-login-page">
         <p className="pw-login-welcome">Welcome to Patchwerx!</p>
-        <h2>Therapist sign-in</h2>
+        <h2>Provider sign-in</h2>
         <p className="pw-lead pw-login-error">
           Sign-in is not configured. Set REACT_APP_COGNITO_HOSTED_UI_DOMAIN and REACT_APP_COGNITO_CLIENT_ID in your environment.
         </p>
@@ -66,9 +66,9 @@ export default function TherapistLogin() {
   return (
     <div className="pw-login-page">
       <p className="pw-login-welcome">Welcome to Patchwerx!</p>
-      <h2>Therapist sign-in</h2>
+      <h2>Provider sign-in</h2>
       <p className="pw-lead pw-login-subtitle">
-        This is the sign-in page for therapists. Click the button below and you’ll be taken to our secure sign-in page—where you can sign in or create a new account.
+        For people who publish appointments and connect Outlook. Click below to open our secure sign-in—sign in or create an account in one flow.
       </p>
 
       {redirectError && (
@@ -87,7 +87,7 @@ export default function TherapistLogin() {
       </button>
 
       <p className="pw-login-note">
-        Prefer to set up your practice first? <Link to="/signup/therapist" className="pw-link">Start setup</Link> to create your account, then come back here to sign in anytime.
+        Prefer to set up your account first? <Link to="/signup/therapist" className="pw-link">Start setup</Link>, then come back here to sign in anytime.
       </p>
     </div>
   )

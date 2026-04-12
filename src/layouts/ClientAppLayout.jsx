@@ -13,11 +13,11 @@ function ClientNav() {
           </div>
           <div className="pw-brandText">
             <div className="pw-brandTitle">Patchwerx</div>
-            <div className="pw-brandSub">Client portal</div>
+            <div className="pw-brandSub">Guest portal</div>
           </div>
         </Link>
 
-        <div className="pw-links" aria-label="Client">
+        <div className="pw-links" aria-label="Guest">
           <NavLink to="/client" end className={linkClass}>
             Profile
           </NavLink>
@@ -42,7 +42,7 @@ export default function ClientAppLayout() {
         </div>
       </main>
 
-      <footer className="pw-footer">© {new Date().getFullYear()} Patchwerx</footer>
+      <footer className="pw-footer">© {new Date().getFullYear()} Patchwerx Technologies LLC</footer>
     </div>
   )
 }

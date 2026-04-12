@@ -13,7 +13,7 @@ function TopNav() {
           </div>
           <div className="pw-brandText">
             <div className="pw-brandTitle">Patchwerx</div>
-            <div className="pw-brandSub">Fill canceled sessions automatically.</div>
+            <div className="pw-brandSub">Outlook, SMS, and friendlier rebooking.</div>
           </div>
         </Link>
 
@@ -28,7 +28,7 @@ function TopNav() {
             Contact
           </NavLink>
           <NavLink to="/signup/therapist" className={linkClass}>
-            Therapist signup
+            Provider signup
           </NavLink>
           <NavLink to="/login/therapist" className={linkClass}>
             Login
@@ -53,9 +53,9 @@ export default function PublicLayout() {
 
       <footer className="pw-footer">
         <div style={{ maxWidth: 560, margin: '0 auto', fontSize: '0.9rem', color: 'var(--ink-muted)', lineHeight: 1.5, marginBottom: 8 }}>
-          Patchwerx helps therapists refill canceled sessions automatically by offering open times to clients who want earlier appointments.
+          Patchwerx connects to Microsoft Outlook, sends SMS reminders so people confirm their time, and helps rebook openings when they don’t—so providers stay booked without the scramble.
         </div>
-        © {new Date().getFullYear()} Patchwerx
+        © {new Date().getFullYear()} Patchwerx Technologies LLC
       </footer>
     </div>
   )

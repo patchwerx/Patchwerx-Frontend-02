@@ -33,12 +33,12 @@ export default function ClientSignup() {
       if (!apiConfigured) throw new Error('Missing REACT_APP_API_BASE_URL')
       if (!email.trim()) throw new Error('Missing email')
       if (!phone.trim()) throw new Error('Missing your phone number')
-      if (!therapistPhone.trim()) throw new Error('Missing therapist phone number')
+      if (!therapistPhone.trim()) throw new Error('Missing provider phone number')
 
       const clientResult = toE164(phone)
       if (clientResult.error) throw new Error(clientResult.error)
       const therapistResult = toE164(therapistPhone)
-      if (therapistResult.error) throw new Error(`Therapist phone: ${therapistResult.error}`)
+      if (therapistResult.error) throw new Error(`Provider phone: ${therapistResult.error}`)
 
       const phone_e164 = clientResult.e164
       const therapist_phone_e164 = therapistResult.e164
@@ -85,7 +85,7 @@ export default function ClientSignup() {
 
   return (
     <div style={{ display: 'grid', gap: 12 }}>
-      <h2 style={styles.h2}>Join the waitlist</h2>
+      <h2 style={styles.h2}>Join the list</h2>
 
       {!submitted ? (
         <form onSubmit={submit} style={styles.form}>
@@ -151,7 +151,7 @@ export default function ClientSignup() {
 
           <div>
             <label style={styles.label} htmlFor="therapistPhone">
-              Your therapist&apos;s phone number
+              Your provider&apos;s phone number
             </label>
             <input
               id="therapistPhone"
@@ -165,13 +165,13 @@ export default function ClientSignup() {
           </div>
 
           <button type="submit" style={styles.button} disabled={loading}>
-            {loading ? 'Submitting…' : 'Join waitlist'}
+            {loading ? 'Submitting…' : 'Join the list'}
           </button>
 
           {error && <div style={styles.error}>{error}</div>}
         </form>
       ) : (
-        <p style={styles.subtleText}>Thanks — you&apos;re on the waitlist.</p>
+        <p style={styles.subtleText}>Thanks — you&apos;re on the list.</p>
       )}
     </div>
   )

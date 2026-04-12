@@ -41,7 +41,7 @@ export default function MicrosoftCallback() {
 
     // No backend redirect params: user may have bookmarked this URL or arrived by mistake.
     setStatus('error')
-    setErrorMessage('No calendar connection result. Start calendar connection from Settings or therapist setup.')
+    setErrorMessage('No calendar connection result. Start calendar connection from Settings or provider signup.')
   }, [calendarConnected, calendarConnectError, returnTo, message, navigate])
 
   if (status === 'error') {
@@ -54,7 +54,7 @@ export default function MicrosoftCallback() {
           {errorMessage}
         </p>
         <a href="/signup/therapist" className="pw-link">
-          Back to therapist setup
+          Back to provider signup
         </a>
         {' · '}
         <a href="/app/settings" className="pw-link">

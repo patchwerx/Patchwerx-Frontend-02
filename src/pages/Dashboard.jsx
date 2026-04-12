@@ -27,7 +27,7 @@ export default function Dashboard() {
       <section>
         <h2>Dashboard</h2>
         <p className="pw-lead">
-          Summary of today, recent cancellations, and rebookings.
+          At-a-glance view of your Outlook connection, cancellations, and rebookings.
         </p>
         {!loading && (statusLabel || syncLabel) && (
           <p className="pw-lead" style={{ marginTop: 12, fontSize: '0.95rem', color: 'var(--ink-muted)' }}>

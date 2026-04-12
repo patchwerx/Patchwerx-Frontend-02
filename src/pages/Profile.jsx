@@ -77,7 +77,7 @@ function AppointmentList({ items, emptyLabel }) {
       {items.map((apt) => (
         <li key={apt.id} style={cardStyle}>
           <div>
-            <div style={{ fontWeight: 700, color: 'var(--ink)', fontSize: '1rem' }}>{apt.title || 'Session'}</div>
+            <div style={{ fontWeight: 700, color: 'var(--ink)', fontSize: '1rem' }}>{apt.title || 'Appointment'}</div>
             <div style={{ fontSize: '0.95rem', color: 'var(--ink-muted)', marginTop: 4 }}>
               {formatAppointmentWhen(apt.starts_at)}
             </div>
@@ -208,9 +208,9 @@ export default function Profile() {
           </div>
         )}
 
-        {/* Therapist name from API */}
+        {/* Provider name from API */}
         <h2 className="pw-h1" style={{ fontSize: '1.35rem', margin: '0 0 12px 0' }}>
-          Your therapist
+          Your provider
         </h2>
         <motion.div
           style={{ ...cardStyle, marginBottom: 28, maxWidth: 480 }}
@@ -232,7 +232,7 @@ export default function Profile() {
           Upcoming appointments
         </h2>
         <p className="pw-lead" style={{ marginBottom: 16, fontSize: '1rem', color: 'var(--ink-muted)' }}>
-          Confirmed sessions scheduled ahead. Times shown in your local timezone.
+          Confirmed appointments coming up. Times shown in your local timezone.
         </p>
         <div
           className="pw-panel"
@@ -256,7 +256,7 @@ export default function Profile() {
           Open for rebooking
         </h2>
         <p className="pw-lead" style={{ marginBottom: 16, fontSize: '1rem', color: 'var(--ink-muted)' }}>
-          Slots with status <strong style={{ color: 'var(--ink)' }}>OPEN_REBOOKING</strong>—available to claim when offered.
+          When a time shows <strong style={{ color: 'var(--ink)' }}>OPEN_REBOOKING</strong>, it means the slot is back in play—Patchwerx can offer it to the next person in line.
         </p>
         <div
           className="pw-panel"

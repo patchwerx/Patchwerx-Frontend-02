@@ -45,30 +45,18 @@ export default function Login() {
         Sign in or create an account. Choose your role below.
       </p>
 
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'stretch',
-          gap: 24,
-          width: '100%',
-        }}
-      >
+      <div className="pw-login-columns">
         <div
-          className="pw-panel"
+          className="pw-panel pw-login-role-panel"
           style={{
-            padding: 24,
-            textAlign: 'center',
             opacity: isCognitoConfigured ? 1 : 0.6,
-            minWidth: 605,
-            flex: '1 1 0',
           }}
         >
           <h2 style={{ margin: '0 0 12px', fontSize: '1.2rem', fontWeight: 700, color: 'var(--ink)' }}>
-            Therapist
+            Provider
           </h2>
-          <p className="pw-lead" style={{ margin: '0 0 20px', marginLeft: 45, fontSize: '0.95rem', color: 'var(--ink-muted)', textAlign: 'center' }}>
-            For practice owners and clinicians.
+          <p className="pw-lead pw-login-role-lead">
+            You offer appointments, connect Outlook, and manage your list of people who want openings.
           </p>
           <button
             type="button"
@@ -86,20 +74,16 @@ export default function Login() {
         </div>
 
         <div
-          className="pw-panel"
+          className="pw-panel pw-login-role-panel"
           style={{
-            padding: 24,
-            textAlign: 'center',
             opacity: isClientPoolConfigured ? 1 : 0.6,
-            minWidth: 605,
-            flex: '1 1 0',
           }}
         >
           <h2 style={{ margin: '0 0 12px', fontSize: '1.2rem', fontWeight: 700, color: 'var(--ink)' }}>
-            Client
+            Guest
           </h2>
-          <p className="pw-lead" style={{ margin: '0 0 20px', marginLeft: 45, fontSize: '0.95rem', color: 'var(--ink-muted)', textAlign: 'center' }}>
-            For clients on a therapist’s waitlist.
+          <p className="pw-lead pw-login-role-lead">
+            You’re on someone’s list for SMS about open times and can pick up a slot when it’s offered.
           </p>
           <button
             type="button"

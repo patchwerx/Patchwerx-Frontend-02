@@ -84,7 +84,7 @@ export default function Waitlist() {
     }
     if (!therapistEmail) {
       setLoading(false)
-      setError('Please log in to view your waitlist.')
+      setError('Please log in to view your list.')
       return
     }
     setLoading(true)
@@ -92,7 +92,7 @@ export default function Waitlist() {
     try {
       // Query param only (no custom headers) so GET is a "simple" request and may not trigger CORS preflight
       const res = await fetch(buildApiUrl(`/clients?email=${encodeURIComponent(therapistEmail)}`))
-      if (!res.ok) throw new Error(res.status === 401 ? 'Unauthorized' : `Failed to load clients (${res.status})`)
+      if (!res.ok) throw new Error(res.status === 401 ? 'Unauthorized' : `Failed to load your list (${res.status})`)
       const data = await res.json()
       const raw = Array.isArray(data) ? data : data?.clients ?? []
       setClients(raw.map(normalizeClient))
@@ -102,7 +102,7 @@ export default function Waitlist() {
         })
       }
     } catch (e) {
-      setError(e.message || 'Could not load clients.')
+      setError(e.message || 'Could not load your list.')
       setClients([])
     } finally {
       setLoading(false)
@@ -138,7 +138,7 @@ export default function Waitlist() {
       setError(null)
       await fetchClients()
     } catch (e) {
-      setError(e.message || 'Could not update client.')
+      setError(e.message || 'Could not save changes.')
     } finally {
       setSavingId(null)
     }
@@ -194,7 +194,7 @@ export default function Waitlist() {
     return (
       <div style={{ paddingBottom: 40 }}>
         <h2 style={{ fontSize: '1.6rem' }}>Waitlist</h2>
-        <p className="pw-lead" style={{ fontSize: '1.08rem' }}>Loading clients…</p>
+        <p className="pw-lead" style={{ fontSize: '1.08rem' }}>Loading your list…</p>
       </div>
     )
   }
@@ -226,7 +226,7 @@ export default function Waitlist() {
         <h1 className="pw-h1" style={{ margin: '0 0 24px 0' }}>
           Patchwerx Dashboard
         </h1>
-        {/* Dashboard metrics: Revenue saved, Successful rebookings, Clients on waitlist */}
+        {/* Dashboard metrics: Revenue saved, Successful rebookings, People on list */}
         {(() => {
           const successfulRebookingsThisMonth = summary.successful_rebookings_this_month
           const revenueSaved = 115 * successfulRebookingsThisMonth
@@ -252,7 +252,7 @@ export default function Waitlist() {
               </motion.div>
               <motion.div style={cardStyle} whileHover={cardHover} transition={cardSpring}>
                 <div style={valueStyle}>{clients.length}</div>
-                <div style={labelStyle}>Clients on waitlist</div>
+                <div style={labelStyle}>People on your list</div>
               </motion.div>
             </div>
           )
@@ -260,7 +260,7 @@ export default function Waitlist() {
 
         <h1 className="pw-h1" style={{ margin: '0 0 8px 0' }}>Waitlist</h1>
         <p className="pw-lead" style={{ marginBottom: 20, fontSize: '1.08rem' }}>
-          Clients for rebooking offers. Edit name, phone, or group.
+          Everyone here can get SMS about open times and rebooking. Edit name, phone, or group as needed.
         </p>
 
         {/* Group filter */}
@@ -308,7 +308,7 @@ export default function Waitlist() {
         )}
 
         {filteredAndSorted.length === 0 ? (
-          <p className="pw-lead">No clients in this group yet.</p>
+          <p className="pw-lead">No one in this group yet.</p>
         ) : (
           <div className="pw-waitlist-table-wrap" style={{ overflowX: 'auto' }}>
             <table className="pw-waitlist-table" style={{ width: '100%', borderCollapse: 'collapse', tableLayout: 'fixed' }}>

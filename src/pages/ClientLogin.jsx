@@ -45,7 +45,7 @@ export default function ClientLogin() {
     return (
       <div className="pw-login-page">
         <p className="pw-login-welcome">Welcome to Patchwerx!</p>
-        <h2>Client sign-in</h2>
+        <h2>Guest sign-in</h2>
         <p className="pw-lead pw-login-muted">Loading…</p>
       </div>
     )
@@ -55,9 +55,9 @@ export default function ClientLogin() {
     return (
       <div className="pw-login-page">
         <p className="pw-login-welcome">Welcome to Patchwerx!</p>
-        <h2>Client sign-in</h2>
+        <h2>Guest sign-in</h2>
         <p className="pw-lead pw-login-error">
-          Client sign-in is not configured. Set REACT_APP_COGNITO_CLIENT_HOSTED_UI_DOMAIN and REACT_APP_COGNITO_CLIENT_CLIENT_ID in your environment.
+          Guest sign-in is not configured. Set REACT_APP_COGNITO_CLIENT_HOSTED_UI_DOMAIN and REACT_APP_COGNITO_CLIENT_CLIENT_ID in your environment.
         </p>
       </div>
     )
@@ -66,9 +66,9 @@ export default function ClientLogin() {
   return (
     <div className="pw-login-page">
       <p className="pw-login-welcome">Welcome to Patchwerx!</p>
-      <h2>Client sign-in</h2>
+      <h2>Guest sign-in</h2>
       <p className="pw-lead pw-login-subtitle">
-        This is the sign-in page for clients. Click the button below and you’ll be taken to our secure sign-in page—where you can sign in or create a new account.
+        For people who joined a provider’s list for SMS about openings. Click below for secure sign-in or account creation.
       </p>
 
       {redirectError && (
@@ -87,7 +87,7 @@ export default function ClientLogin() {
       </button>
 
       <p className="pw-login-note">
-        New to the waitlist? <Link to="/signup/client" className="pw-link">Join the waitlist</Link> first, then come back here to sign in once you have an account.
+        New to the list? <Link to="/signup/client" className="pw-link">Join here</Link> first, then come back to sign in once you have an account.
       </p>
     </div>
   )

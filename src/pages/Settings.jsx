@@ -77,7 +77,7 @@ export default function Settings() {
 
     if (!therapistId) {
       setOutlookRefreshError(
-        'Could not determine your account. Missing therapist_id from GET /calendar-connection response.'
+        'Could not determine your account from the calendar connection. Try signing out and back in, or complete provider signup again.'
       )
       return
     }
@@ -107,7 +107,7 @@ export default function Settings() {
     <div className="pw-settings" style={{ display: 'grid', gap: 24 }}>
       <h1 className="pw-h1" style={{ margin: '0 0 24px 0' }}>Calendar</h1>
       <p style={styles.subtleText}>
-        View and refresh your Outlook calendar connection.
+        Patchwerx reads your Microsoft Outlook calendar here—refresh the connection anytime you change accounts or permissions.
       </p>
 
       {/* Calendar connection */}
@@ -128,7 +128,7 @@ export default function Settings() {
           <p style={styles.subtleText}>
             No calendar connected. Connect Outlook from{' '}
             <Link to="/signup/therapist" className="pw-link">
-              therapist setup
+              provider signup
             </Link>
             .
           </p>

@@ -15,14 +15,14 @@ export default function Pricing() {
             Simple Pricing
           </h1>
           <p className="pw-lead" style={{ marginTop: 16, fontSize: '1.15rem', lineHeight: 1.7, maxWidth: 640 }}>
-            You only pay when Patchwerx successfully fills a canceled session.
+            You only pay when Patchwerx successfully fills a canceled appointment.
           </p>
 
           {/* Micro calculator (moved left of hero) */}
           <section style={{ marginTop: 18 }}>
             <div className="pw-panel" style={{ padding: 18, maxWidth: 560 }}>
               <p style={{ margin: 0, fontSize: '1rem', lineHeight: 1.65, color: 'var(--ink-muted)' }}>
-                If Patchwerx doesn't help you do the work you love, then it's free.
+                If Patchwerx doesn’t help you stay booked, then it’s free.
               </p>
             </div>
           </section>

@@ -13,11 +13,11 @@ function TherapistNav() {
           </div>
           <div className="pw-brandText">
             <div className="pw-brandTitle">Patchwerx</div>
-            <div className="pw-brandSub">Therapist portal</div>
+            <div className="pw-brandSub">Provider portal</div>
           </div>
         </Link>
 
-        <div className="pw-links" aria-label="Therapist">
+        <div className="pw-links" aria-label="Provider">
           <NavLink to="/app/waitlist" className={linkClass}>
             Dashboard
           </NavLink>
@@ -45,7 +45,7 @@ export default function TherapistAppLayout() {
         </div>
       </main>
 
-      <footer className="pw-footer">© {new Date().getFullYear()} Patchwerx</footer>
+      <footer className="pw-footer">© {new Date().getFullYear()} Patchwerx Technologies LLC</footer>
     </div>
   )
 }

@@ -266,7 +266,7 @@ export default function TherapistSignup() {
 
     const therapistId = localStorage.getItem('pw_therapist_id')
     if (!therapistId) {
-      setOutlookError('Missing therapist_id. Please create account first.')
+      setOutlookError('Missing account reference. Please create your account first.')
       setConnectingOutlook(false)
       return
     }
@@ -308,9 +308,9 @@ export default function TherapistSignup() {
 
   return (
     <div style={styles.card}>
-      <h2 style={styles.title}>Therapist signup</h2>
+      <h2 style={styles.title}>Provider signup</h2>
       <p style={styles.lead}>
-        Create your account so we can connect your calendar and start filling openings automatically.
+        Create your account so we can connect Microsoft Outlook and start sending SMS reminders, confirmations, and rebooking offers for your open times.
       </p>
 
       {!submitted ? (
@@ -355,7 +355,7 @@ export default function TherapistSignup() {
               id="email"
               style={styles.input}
               type="email"
-              placeholder="you@practice.com"
+              placeholder="you@yourbusiness.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               autoComplete="email"
@@ -393,7 +393,7 @@ export default function TherapistSignup() {
         <div style={{ marginTop: 10 }}>
           <div style={styles.success}>Account created ✅</div>
           <div style={styles.sub}>
-            Next step: connect your calendar so Patchwerx can detect openings and fill them automatically.
+            Next step: connect Outlook so Patchwerx can see openings, send the right texts, and run rebooking when someone doesn’t confirm.
           </div>
 
           <div style={styles.stepPillRow}>
