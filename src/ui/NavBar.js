@@ -16,7 +16,7 @@ export default function NavBar({ links = [] }) {
             </div>
             <div className="pw-brandText">
               <div className="pw-brandTitle">Patchwerx</div>
-              <div className="pw-brandSub">Outlook in sync, SMS nudges, slots refilled.</div>
+              <div className="pw-brandSub">Automatic SMS rebooking for appointments</div>
             </div>
           </Link>
 

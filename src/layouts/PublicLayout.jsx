@@ -21,9 +21,6 @@ function TopNav() {
           <NavLink to="/about" className={linkClass}>
             About
           </NavLink>
-          <NavLink to="/pricing" className={linkClass}>
-            Pricing
-          </NavLink>
           <NavLink to="/contact" className={linkClass}>
             Contact
           </NavLink>

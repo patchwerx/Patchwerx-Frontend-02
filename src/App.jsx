@@ -71,7 +71,7 @@ function Nav() {
             </div>
             <div className="pw-brandText">
               <div className="pw-brandTitle">Patchwerx</div>
-              <div className="pw-brandSub">Outlook in sync, SMS nudges, slots refilled.</div>
+              <div className="pw-brandSub">Automatic SMS rebooking for appointments</div>
             </div>
           </Link>
 
@@ -82,11 +82,6 @@ function Nav() {
             <NavLink to="/about" className={linkClass}>
               About
             </NavLink>
-            {!isClient && (
-              <NavLink to="/pricing" className={linkClass}>
-                Pricing
-              </NavLink>
-            )}
             <NavLink to="/contact" className={linkClass}>
               Contact
             </NavLink>
@@ -96,11 +91,6 @@ function Nav() {
                 {isTherapist && (
                   <NavLink to="/app/waitlist" className={linkClass}>
                     Dashboard
-                  </NavLink>
-                )}
-                {!isClient && (
-                  <NavLink to="/app/settings" className={linkClass}>
-                    Calendar
                   </NavLink>
                 )}
                 {isClient && (
@@ -118,14 +108,9 @@ function Nav() {
                 </button>
               </>
             ) : (
-              <>
-                <NavLink to="/app/settings" className={linkClass}>
-                  Calendar
-                </NavLink>
-                <NavLink to="/login" className={linkClass}>
-                  Login
-                </NavLink>
-              </>
+              <NavLink to="/login" className={linkClass}>
+                Login
+              </NavLink>
             )}
           </nav>
         </div>
