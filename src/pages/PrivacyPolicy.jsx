@@ -5,7 +5,7 @@ export default function PrivacyPolicy() {
         <article className="pw-legal-doc">
         <header>
           <h1 className="pw-legal-title">Privacy Policy</h1>
-          <p className="pw-legal-meta">Last updated: April 11, 2026</p>
+          <p className="pw-legal-meta">Last updated: August 8, 2026</p>
         </header>
 
         <section aria-labelledby="p1">
@@ -67,6 +67,29 @@ export default function PrivacyPolicy() {
           </p>
         </section>
 
+        <section aria-labelledby="p4b">
+          <h2 id="p4b">4a. SMS / Mobile Opt-In Information</h2>
+          <p>
+            When you opt in to Patchwerx transactional SMS communications, we collect your mobile phone number and
+            record of consent (including the time of consent and the applicable disclosure) so we can send
+            appointment-related messages you requested. These messages may include appointment scheduling
+            communications, appointment confirmations, reminders, cancellations, and notifications of available
+            appointment times.
+          </p>
+          <p>
+            We do not sell, rent, or share mobile opt-in information or consent records with third parties for those
+            third parties&rsquo; own marketing or messaging purposes. We may share your phone number and related
+            delivery data only with service providers that perform messaging or infrastructure services on our behalf
+            (for example, Twilio and Amazon Web Services), and only as needed to deliver the messages you opted into
+            or to operate the Service.
+          </p>
+          <p>
+            You may opt out at any time by replying STOP. For help, reply HELP. Message frequency varies. Message and
+            data rates may apply. Consent to receive SMS messages is not a condition of purchasing or using Patchwerx
+            services.
+          </p>
+        </section>
+
         <section aria-labelledby="p5">
           <h2 id="p5">5. Sharing of Information</h2>
           <p>We do not sell your personal information.</p>
@@ -77,6 +100,10 @@ export default function PrivacyPolicy() {
             <li>Microsoft</li>
           </ul>
           <p>These providers only access data necessary to perform their services.</p>
+          <p>
+            Mobile opt-in data is not shared with third parties for their own promotional or messaging use, as
+            described in Section 4a.
+          </p>
         </section>
 
         <section aria-labelledby="p6">

@@ -15,6 +15,7 @@ import MicrosoftCallback from './pages/MicrosoftCallback'
 import Profile from './pages/Profile'
 import TermsOfService from './pages/TermsOfService'
 import PrivacyPolicy from './pages/PrivacyPolicy'
+import SmsConsent from './pages/SmsConsent'
 
 function RequireTherapist({ children }) {
   const { isAuthenticated, isTherapist, isLoading } = useCognitoAuth()
@@ -93,6 +94,11 @@ function Nav() {
                     Dashboard
                   </NavLink>
                 )}
+                {!isClient && (
+                  <NavLink to="/app/settings" className={linkClass}>
+                    Calendar
+                  </NavLink>
+                )}
                 {isClient && (
                   <NavLink to="/client" className={linkClass}>
                     Dashboard
@@ -108,9 +114,14 @@ function Nav() {
                 </button>
               </>
             ) : (
-              <NavLink to="/login" className={linkClass}>
-                Login
-              </NavLink>
+              <>
+                <NavLink to="/app/settings" className={linkClass}>
+                  Calendar
+                </NavLink>
+                <NavLink to="/login" className={linkClass}>
+                  Login
+                </NavLink>
+              </>
             )}
           </nav>
         </div>
@@ -217,6 +228,14 @@ export default function App() {
             element={
               <Shell>
                 <PrivacyPolicy />
+              </Shell>
+            }
+          />
+          <Route
+            path="/sms-consent"
+            element={
+              <Shell>
+                <SmsConsent />
               </Shell>
             }
           />
